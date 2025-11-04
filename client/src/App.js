@@ -56,7 +56,7 @@ function App() {
     {
       id: 4,
       tipo: "Casa",
-      imagen: "https://images.unsplash.com/photo-1560184897-67f4a4b3e7b4?w=800",
+      imagen: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fes%2Ffotos%2Fdepartamento&psig=AOvVaw0fjS72gWWAO1bWC0liONWn&ust=1762373812746000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCIDHmJuo2ZADFQAAAAAdAAAAABAE",
       precio: 230000,
       ubicacion: "Surco, Lima",
       areaConstruida: 190,
