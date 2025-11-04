@@ -56,7 +56,7 @@ function App() {
     {
       id: 4,
       tipo: "Casa",
-      imagen: "https://lh3.googleusercontent.com/proxy/oozEjLwYlERDb_EgkQU5r2XI-goOix2lmwzf94rKTGt0b1tZKAiPR5ENsRXeSsdLVNA7py66Ak3OrWY1bEPGJud8lRefEaRC9ijf0CfMEQ",
+      imagen: "https://static.babilonia.pe/assets/img/photo/c6d4c66b-5d7e-4020-997f-782ceff174fd.jpeg",
       precio: 230000,
       ubicacion: "Surco, Lima",
       areaConstruida: 190,
