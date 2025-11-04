@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
+<<<<<<< Updated upstream
 function Sidebar({ usuarioLogueado, setContenido }) {
   
   const manejarClickCalculo = () => {
@@ -54,8 +55,57 @@ function Sidebar({ usuarioLogueado, setContenido }) {
         </li>
       </ul>
     </div>
+=======
+function Sidebar() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleSidebar = () => setIsOpen(!isOpen);
+
+  return (
+    <>
+      {/* Botón hamburguesa */}
+      <button
+        className="btn btn-primary position-fixed top-0 end-0 m-3"
+        onClick={toggleSidebar}
+        style={{ zIndex: 1050 }}
+      >
+        ☰
+      </button>
+
+      {/* Sidebar deslizable */}
+      <div className={`sidebar ${isOpen ? "open" : ""}`}>
+        <div className="sidebar-content">
+          <h4 className="text-center mb-4 text-light">Menú</h4>
+          <ul className="list-unstyled">
+            <li className="mb-2">
+              <a href="#" className="text-light nav-link">Inicio</a>
+            </li>
+            <li className="mb-2">
+              <a href="#" className="text-light nav-link">Buscar Propiedades</a>
+            </li>
+            <li className="mb-2">
+              <a href="#" className="text-light nav-link">Oficinas</a>
+            </li>
+            <li className="mb-2">
+              <a href="#" className="text-light nav-link">Asesores</a>
+            </li>
+            <li className="mb-2">
+              <a href="#" className="text-light nav-link">Contáctanos</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Fondo oscuro cuando el sidebar está abierto */}
+      {isOpen && (
+        <div
+          className="sidebar-overlay"
+          onClick={toggleSidebar}
+        ></div>
+      )}
+    </>
+>>>>>>> Stashed changes
   );
 }
 
 export default Sidebar;
-
