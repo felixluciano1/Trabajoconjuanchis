@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Sidebar from "./sidebar";
 
+
 function App() {
   const propiedades = [
     {

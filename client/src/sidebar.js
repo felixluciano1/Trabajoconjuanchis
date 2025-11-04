@@ -11,7 +11,7 @@ function Sidebar() {
           <a href="#inicio" className="nav-link text-light">Inicio</a>
         </li>
         <li className="nav-item mb-3">
-          <a href="#buscar" className="nav-link text-light">Buscar Propiedades</a>
+          <a href="#buscar" className="nav-link text-light">Iniciar Sesion</a>
         </li>
         <li className="nav-item mb-3">
           <a href="#oficinas" className="nav-link text-light">Oficinas</a>
