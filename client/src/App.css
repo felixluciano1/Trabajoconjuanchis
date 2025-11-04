@@ -56,3 +56,30 @@ body {
 .card-body p {
   font-size: 0.9rem;
 }
+
+.app-container {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  position: fixed;
+  right: 0;
+  top: 0;
+  background-color: #212529;
+  box-shadow: -3px 0 8px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar .nav-link {
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+
+.sidebar .nav-link:hover {
+  background-color: #495057;
+  border-radius: 5px;
+  color: #ffc107 !important;
+}
