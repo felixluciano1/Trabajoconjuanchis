@@ -1,7 +1,7 @@
 import './App.css';
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./App.css";
+import Sidebar from "./sidebar";
 
 function App() {
   const propiedades = [
@@ -74,63 +74,67 @@ function App() {
   const [hovered, setHovered] = useState(null);
 
   return (
-    <div className="container mt-4">
-      <h2 className="text-center mb-4 titulo">Propiedades en venta o renta</h2>
-      <div className="row">
-        {propiedades.map((prop) => (
-          <div
-            className="col-md-3 mb-4"
-            key={prop.id}
-            onMouseEnter={() => setHovered(prop.id)}
-            onMouseLeave={() => setHovered(null)}
-            style={{ position: "relative" }}
-          >
-            <div className="card propiedad-card shadow-lg border-0">
-              <img
-                src={prop.imagen}
-                className="card-img-top propiedad-img"
-                alt={prop.tipo}
-              />
-              <div className="card-body">
-                <h5 className="card-title text-primary">{prop.tipo}</h5>
-                <p className="card-text mb-1">
-                  <strong>Precio:</strong> ${prop.precio.toLocaleString()}
-                </p>
-                <p className="card-text mb-1">
-                  <strong>Ubicación:</strong> {prop.ubicacion}
-                </p>
-                <p className="card-text mb-1">
-                  <strong>Área construida:</strong> {prop.areaConstruida} m²
-                </p>
-                <p className="card-text">
-                  <strong>Área ocupada:</strong> {prop.areaOcupada} m²
-                </p>
-              </div>
-            </div>
-
-            {hovered === prop.id && (
-              <div className="overlay-asesor d-flex flex-column justify-content-center align-items-center text-white">
+    <div className="app-container">
+      <div className="container mt-4">
+        <h2 className="text-center mb-4 titulo">Propiedades en venta o renta</h2>
+        <div className="row">
+          {propiedades.map((prop) => (
+            <div
+              className="col-md-3 mb-4"
+              key={prop.id}
+              onMouseEnter={() => setHovered(prop.id)}
+              onMouseLeave={() => setHovered(null)}
+              style={{ position: "relative" }}
+            >
+              <div className="card propiedad-card shadow-lg border-0">
                 <img
-                  src={prop.asesor.foto}
-                  alt={prop.asesor.nombre}
-                  className="asesor-foto mb-2"
+                  src={prop.imagen}
+                  className="card-img-top propiedad-img"
+                  alt={prop.tipo}
                 />
-                <h6>{prop.asesor.nombre}</h6>
-                <p className="mb-1">Tel: {prop.asesor.telefono}</p>
-                <p className="mb-1">{prop.asesor.correo}</p>
-                <a
-                  href={prop.asesor.whatsapp}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-success btn-sm mt-2"
-                >
-                  WhatsApp
-                </a>
+                <div className="card-body">
+                  <h5 className="card-title text-primary">{prop.tipo}</h5>
+                  <p className="card-text mb-1">
+                    <strong>Precio:</strong> ${prop.precio.toLocaleString()}
+                  </p>
+                  <p className="card-text mb-1">
+                    <strong>Ubicación:</strong> {prop.ubicacion}
+                  </p>
+                  <p className="card-text mb-1">
+                    <strong>Área construida:</strong> {prop.areaConstruida} m²
+                  </p>
+                  <p className="card-text">
+                    <strong>Área ocupada:</strong> {prop.areaOcupada} m²
+                  </p>
+                </div>
               </div>
-            )}
-          </div>
-        ))}
+
+              {hovered === prop.id && (
+                <div className="overlay-asesor d-flex flex-column justify-content-center align-items-center text-white">
+                  <img
+                    src={prop.asesor.foto}
+                    alt={prop.asesor.nombre}
+                    className="asesor-foto mb-2"
+                  />
+                  <h6>{prop.asesor.nombre}</h6>
+                  <p className="mb-1">Tel: {prop.asesor.telefono}</p>
+                  <p className="mb-1">{prop.asesor.correo}</p>
+                  <a
+                    href={prop.asesor.whatsapp}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-success btn-sm mt-2"
+                  >
+                    WhatsApp
+                  </a>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
+
+      <Sidebar /> {/* <-- Aquí se muestra el menú lateral */}
     </div>
   );
 }
