@@ -56,7 +56,7 @@ function App() {
     {
       id: 4,
       tipo: "Casa",
-      imagen: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fes%2Ffotos%2Fdepartamento&psig=AOvVaw0fjS72gWWAO1bWC0liONWn&ust=1762373812746000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCIDHmJuo2ZADFQAAAAAdAAAAABAE",
+      imagen: "https://lh3.googleusercontent.com/proxy/oozEjLwYlERDb_EgkQU5r2XI-goOix2lmwzf94rKTGt0b1tZKAiPR5ENsRXeSsdLVNA7py66Ak3OrWY1bEPGJud8lRefEaRC9ijf0CfMEQ",
       precio: 230000,
       ubicacion: "Surco, Lima",
       areaConstruida: 190,
