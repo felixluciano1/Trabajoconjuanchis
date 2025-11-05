@@ -16,7 +16,7 @@ function App() {
   const [departamentos, setDepartamentos] = useState([]);
   const [departamentoSeleccionado, setDepartamentoSeleccionado] = useState("");
 
-  // 🔄 Cargar propiedades al inicio
+  // 🔄 Cargar propiedades
   useEffect(() => {
     fetch("http://localhost:5000/api/inmuebles")
       .then((res) => res.json())
@@ -24,7 +24,7 @@ function App() {
       .catch((err) => console.error("Error al cargar propiedades:", err));
   }, []);
 
-  // 🔄 Cargar departamentos dinámicamente desde el backend
+  // 🔄 Cargar departamentos dinámicamente
   useEffect(() => {
     fetch("http://localhost:5000/api/departamentos")
       .then((res) => res.json())
@@ -35,10 +35,7 @@ function App() {
   // 🔍 Manejar búsqueda
   const manejarBusqueda = (e) => {
     e.preventDefault();
-    console.log("🔎 Filtro:", filtro);
-    console.log("🔎 Búsqueda:", busqueda);
-    console.log("🏙️ Departamento:", departamentoSeleccionado);
-    // Aquí más adelante puedes filtrar propiedades desde el backend
+    console.log("🔎 Buscando por:", filtro, busqueda, departamentoSeleccionado);
   };
 
   return (
@@ -52,29 +49,33 @@ function App() {
       <div className="contenido flex-grow-1 p-4">
         {contenido === "inicio" && (
           <div className="container mt-4">
-            {/* 🔍 Sección del buscador */}
+            {/* 🔍 Buscador de propiedades */}
             <div className="card shadow-sm mb-4">
               <div className="card-body">
                 <h4 className="text-center text-primary mb-3">
                   🏡 Buscador de Propiedades
                 </h4>
 
+                {/* 🔘 Botones de filtros */}
+                <div className="d-flex justify-content-center gap-3 mb-3 flex-wrap">
+                  {["ubicacion", "propietario", "asesor"].map((tipo) => (
+                    <button
+                      key={tipo}
+                      type="button"
+                      className={`btn ${filtro === tipo ? "btn-primary" : "btn-outline-primary"
+                        } px-4`}
+                      onClick={() => setFiltro(tipo)}
+                    >
+                      {tipo.charAt(0).toUpperCase() + tipo.slice(1)}
+                    </button>
+                  ))}
+                </div>
+
+                {/* 🔤 Buscador dinámico */}
                 <form
                   onSubmit={manejarBusqueda}
                   className="d-flex align-items-center gap-3 flex-wrap"
                 >
-                  {/* Select de tipo de búsqueda */}
-                  <select
-                    className="form-select w-auto"
-                    value={filtro}
-                    onChange={(e) => setFiltro(e.target.value)}
-                  >
-                    <option value="ubicacion">Ubicación</option>
-                    <option value="propietario">Propietario</option>
-                    <option value="asesor">Asesor</option>
-                  </select>
-
-                  {/* Campo de texto */}
                   <input
                     type="text"
                     className="form-control"
@@ -84,13 +85,13 @@ function App() {
                     style={{ flex: "1" }}
                   />
 
-                  {/* Select dinámico de departamentos */}
+                  {/* 🏙️ Select de departamentos */}
                   <select
                     className="form-select w-auto"
                     value={departamentoSeleccionado}
                     onChange={(e) => setDepartamentoSeleccionado(e.target.value)}
                   >
-                    <option value="">Todos los departamentos</option>
+                    <option value="">Departamentos</option>
                     {departamentos.map((dep, i) => (
                       <option key={i} value={dep}>
                         {dep}
@@ -98,14 +99,14 @@ function App() {
                     ))}
                   </select>
 
-                  <button type="submit" className="btn btn-primary">
+                  <button type="submit" className="btn btn-success px-4">
                     Buscar
                   </button>
                 </form>
               </div>
             </div>
 
-            {/* 🔽 Título y listado de propiedades */}
+            {/* 🏘️ Listado de propiedades */}
             <h2 className="text-center mb-4 titulo">
               Propiedades en venta o renta
             </h2>
@@ -134,8 +135,7 @@ function App() {
                         <strong>Ubicación:</strong> {prop.ubicacion}
                       </p>
                       <p>
-                        <strong>Área construida:</strong>{" "}
-                        {prop.areaConstruida} m²
+                        <strong>Área construida:</strong> {prop.areaConstruida} m²
                       </p>
                       <p>
                         <strong>Área ocupada:</strong> {prop.areaOcupada} m²
