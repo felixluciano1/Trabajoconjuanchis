@@ -27,7 +27,6 @@ app.get("/", (req, res) => {
     res.send("Servidor backend de inmobiliaria funcionando correctamente");
 });
 
-// ✅ Ruta para obtener departamentos desde la tabla inmueble
 app.get("/api/departamentos", (req, res) => {
     const query = `
       SELECT DISTINCT departamento 
@@ -46,7 +45,6 @@ app.get("/api/departamentos", (req, res) => {
     });
 });
 
-// ✅ Ruta para obtener publicaciones
 app.get("/api/publicaciones", (req, res) => {
     const query = `
     SELECT 
