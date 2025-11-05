@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Sidebar from "./sidebar";
 import FormularioCalculo from "./components/FormularioCalculo";
+import LoginForm from "./components/LoginForm";
 import "./App.css";
 
 function App() {
@@ -208,10 +209,11 @@ function App() {
           </div>
         )}
 
-        {/* Mostrar login simulado */}
+     
         {contenido === "login" && (
-          <button onClick={iniciarSesion} className="btn btn-primary">Hacer login (simulado)</button>
-        )}
+         <LoginForm onLoginSuccess={() => setUsuarioLogueado(true)} />
+         )}
+
 
         {/* Mostrar formulario de cálculo */}
         {contenido === "calculo" && <FormularioCalculo />}
