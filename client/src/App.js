@@ -10,13 +10,14 @@ function App() {
   const [usuarioLogueado, setUsuarioLogueado] = useState(false);
   const [contenido, setContenido] = useState("inicio");
 
-  // 🏠 Estados del buscador
-  const [filtro, setFiltro] = useState("ubicacion");
+  // Estados del buscador
+  const [filtro, setFiltro] = useState("Comprar"); 
   const [busqueda, setBusqueda] = useState("");
   const [departamentos, setDepartamentos] = useState([]);
   const [departamentoSeleccionado, setDepartamentoSeleccionado] = useState("");
+  const [sugerencias, setSugerencias] = useState([]);
 
-  // 🔄 Cargar propiedades
+  // Cargar propiedades al inicio
   useEffect(() => {
     fetch("http://localhost:5000/api/inmuebles")
       .then((res) => res.json())
@@ -24,7 +25,7 @@ function App() {
       .catch((err) => console.error("Error al cargar propiedades:", err));
   }, []);
 
-  // 🔄 Cargar departamentos dinámicamente
+  // Cargar departamentos dinámicamente
   useEffect(() => {
     fetch("http://localhost:5000/api/departamentos")
       .then((res) => res.json())
@@ -32,10 +33,28 @@ function App() {
       .catch((err) => console.error("Error al obtener departamentos:", err));
   }, []);
 
-  // 🔍 Manejar búsqueda
+  // Filtrar sugerencias dinámicas desde la tabla `inmueble`
+  useEffect(() => {
+    if (busqueda.length > 0) {
+      const filtradas = propiedades
+        .map((p) => p.ubicacion)
+        .filter((u) =>
+          u.toLowerCase().includes(busqueda.toLowerCase())
+        );
+      setSugerencias([...new Set(filtradas)]); // elimina duplicados
+    } else {
+      setSugerencias([]);
+    }
+  }, [busqueda, propiedades]);
+
+  // Manejar búsqueda
   const manejarBusqueda = (e) => {
     e.preventDefault();
-    console.log("🔎 Buscando por:", filtro, busqueda, departamentoSeleccionado);
+    console.log("🔎 Acción:", filtro);
+    console.log("🔎 Ubicación:", busqueda);
+    console.log("🏙️ Departamento:", departamentoSeleccionado);
+    // Redirigir a formulario de cálculo
+    setContenido("calculo");
   };
 
   return (
@@ -49,43 +68,63 @@ function App() {
       <div className="contenido flex-grow-1 p-4">
         {contenido === "inicio" && (
           <div className="container mt-4">
-            {/* 🔍 Buscador de propiedades */}
+            {/* Buscador */}
             <div className="card shadow-sm mb-4">
               <div className="card-body">
                 <h4 className="text-center text-primary mb-3">
-                  🏡 Buscador de Propiedades
+                  Encuentra tu Hogar
                 </h4>
 
-                {/* 🔘 Botones de filtros */}
+                {/* Botones Comprar / Alquilar */}
                 <div className="d-flex justify-content-center gap-3 mb-3 flex-wrap">
-                  {["ubicacion", "propietario", "asesor"].map((tipo) => (
+                  {["Comprar", "Alquilar"].map((tipo) => (
                     <button
                       key={tipo}
                       type="button"
-                      className={`btn ${filtro === tipo ? "btn-primary" : "btn-outline-primary"
-                        } px-4`}
+                      className={`btn ${filtro === tipo ? "btn-primary" : "btn-outline-primary"} px-4`}
                       onClick={() => setFiltro(tipo)}
                     >
-                      {tipo.charAt(0).toUpperCase() + tipo.slice(1)}
+                      {tipo}
                     </button>
                   ))}
                 </div>
 
-                {/* 🔤 Buscador dinámico */}
+                {/* Buscador dinámico */}
                 <form
                   onSubmit={manejarBusqueda}
                   className="d-flex align-items-center gap-3 flex-wrap"
                 >
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder={`Buscar por ${filtro}...`}
-                    value={busqueda}
-                    onChange={(e) => setBusqueda(e.target.value)}
-                    style={{ flex: "1" }}
-                  />
+                  <div style={{ position: "relative", flex: 1, maxWidth: "320px" }}>
+                    <input
+                      type="text"
+                      className="form-control buscador-input"
+                      placeholder="Buscar ubicación..."
+                      value={busqueda}
+                      onChange={(e) => setBusqueda(e.target.value)}
+                    />
+                    {sugerencias.length > 0 && (
+                      <ul
+                        className="list-group position-absolute w-100"
+                        style={{ zIndex: 1000, maxHeight: "200px", overflowY: "auto" }}
+                      >
+                        {sugerencias.map((sug, i) => (
+                          <li
+                            key={i}
+                            className="list-group-item list-group-item-action"
+                            style={{ cursor: "pointer" }}
+                            onClick={() => {
+                              setBusqueda(sug);
+                              setSugerencias([]);
+                            }}
+                          >
+                            {sug}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
 
-                  {/* 🏙️ Select de departamentos */}
+                  {/* Select de departamentos al costado */}
                   <select
                     className="form-select w-auto"
                     value={departamentoSeleccionado}
@@ -106,7 +145,7 @@ function App() {
               </div>
             </div>
 
-            {/* 🏘️ Listado de propiedades */}
+            {/* Listado de propiedades */}
             <h2 className="text-center mb-4 titulo">
               Propiedades en venta o renta
             </h2>

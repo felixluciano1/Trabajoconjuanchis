@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+// Conexión a la base de datos
 const db = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -23,10 +24,12 @@ db.connect((err) => {
     }
 });
 
+// Ruta raíz
 app.get("/", (req, res) => {
     res.send("Servidor backend de inmobiliaria funcionando correctamente");
 });
 
+// Ruta para obtener departamentos únicos
 app.get("/api/departamentos", (req, res) => {
     const query = `
       SELECT DISTINCT departamento 
@@ -45,6 +48,27 @@ app.get("/api/departamentos", (req, res) => {
     });
 });
 
+// Ruta para obtener inmuebles, filtrando por ubicación si se pasa query
+app.get("/api/inmuebles", (req, res) => {
+    const { ubicacion } = req.query;
+    let sql = "SELECT * FROM inmueble";
+    const params = [];
+
+    if (ubicacion) {
+        sql += " WHERE ubicacion LIKE ?";
+        params.push(`%${ubicacion}%`);
+    }
+
+    db.query(sql, params, (err, results) => {
+        if (err) {
+            console.error("Error al obtener inmuebles:", err);
+            return res.status(500).json({ error: "Error al obtener inmuebles" });
+        }
+        res.json(results);
+    });
+});
+
+// Rutas de publicaciones existentes
 app.get("/api/publicaciones", (req, res) => {
     const query = `
     SELECT 
@@ -72,7 +96,7 @@ app.get("/api/publicaciones", (req, res) => {
     });
 });
 
-// ✅ Ruta para insertar publicaciones
+// Insertar nueva publicación
 app.post("/api/publicaciones", (req, res) => {
     const {
         foto,
@@ -122,6 +146,7 @@ app.post("/api/publicaciones", (req, res) => {
     );
 });
 
+// Iniciar servidor
 app.listen(PORT, () => {
     console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });
