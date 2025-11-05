@@ -12,48 +12,99 @@ const db = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "",
-    database: "base_inmobiliaria"
+    database: "base_inmobiliaria",
 });
 
 db.connect((err) => {
     if (err) {
         console.error("Error al conectar con la base de datos:", err);
     } else {
-        console.log("Conexión exitosa a base_inmobiliaria");
+        console.log("Conectado correctamente a base_inmobiliaria");
     }
 });
 
-// 🏡 Endpoint: traer todos los inmuebles con su asesor
-app.get("/api/inmuebles", (req, res) => {
+app.get("/", (req, res) => {
+    res.send("Servidor backend de inmobiliaria funcionando correctamente");
+});
+
+app.get("/api/publicaciones", (req, res) => {
     const query = `
-        SELECT i.*, 
-               a.nombre AS asesor_nombre,
-               a.telefono AS asesor_telefono,
-               a.correo AS asesor_correo,
-               a.whatsapp AS asesor_whatsapp,
-               a.foto AS asesor_foto
-        FROM inmueble i
-        LEFT JOIN asesor a ON i.AsesorId = a.AsesorId
-    `;
+    SELECT 
+      p.PublicacionId,
+      p.foto,
+      p.ubicacion,
+      p.superficie_m2,
+      p.habitaciones,
+      p.baños,
+      p.año_construccion,
+      p.precio_venta,
+      p.nombre_propietario,
+      p.telefono,
+      p.correo,
+      a.nombre AS asesor
+    FROM publicacion p
+    LEFT JOIN asesor a ON p.AsesorId = a.AsesorId
+  `;
     db.query(query, (err, results) => {
-        if (err) return res.status(500).json({ error: err });
+        if (err) {
+            console.error("Error al obtener publicaciones:", err);
+            return res.status(500).json({ error: "Error al obtener publicaciones" });
+        }
         res.json(results);
     });
 });
 
-// 🧩 Endpoint para agregar inmueble (como publicar)
-app.post("/api/inmuebles", (req, res) => {
-    const { tipo, imagen, precio, ubicacion, areaConstruida, areaOcupada, AsesorId } = req.body;
+
+app.post("/api/publicaciones", (req, res) => {
+    const {
+        foto,
+        ubicacion,
+        superficie_m2,
+        habitaciones,
+        baños,
+        año_construccion,
+        precio_venta,
+        nombre_propietario,
+        telefono,
+        correo,
+        AsesorId,
+    } = req.body;
+
     const query = `
-        INSERT INTO inmueble (tipo, imagen, precio, ubicacion, areaConstruida, areaOcupada, AsesorId)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    `;
-    db.query(query, [tipo, imagen, precio, ubicacion, areaConstruida, areaOcupada, AsesorId], (err, result) => {
-        if (err) return res.status(500).json({ error: err });
-        res.json({ mensaje: "Inmueble publicado correctamente", id: result.insertId });
-    });
+    INSERT INTO publicacion 
+    (foto, ubicacion, superficie_m2, habitaciones, baños, año_construccion, precio_venta, nombre_propietario, telefono, correo, AsesorId)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+
+    db.query(
+        query,
+        [
+            foto,
+            ubicacion,
+            superficie_m2,
+            habitaciones,
+            baños,
+            año_construccion,
+            precio_venta,
+            nombre_propietario,
+            telefono,
+            correo,
+            AsesorId,
+        ],
+        (err, result) => {
+            if (err) {
+                console.error("Error al insertar publicación:", err);
+                return res.status(500).json({ error: "Error al insertar publicación" });
+            }
+            res.json({
+                mensaje: "Publicación agregada correctamente",
+                id: result.insertId,
+            });
+        }
+    );
 });
 
 app.listen(PORT, () => {
-    console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
+
