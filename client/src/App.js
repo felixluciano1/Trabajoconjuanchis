@@ -4,136 +4,85 @@ import FormularioCalculo from "./components/FormularioCalculo";
 import "./App.css";
 
 function App() {
-  const propiedades = [ 
-    
+  const propiedades = [
+
     {
       id: 1,
+      tipo: "Departamento",
 
-   tipo: "Departamento",
+      imagen: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",
+      precio: 95000,
+      ubicacion: "Miraflores, Lima",
+      areaConstruida: 85,
+      areaOcupada: 100,
+      asesor: {
+        nombre: "Carlos López",
+        telefono: "987654321",
+        correo: "carlos@inmobiliaria.com",
+        whatsapp: "https://wa.me/51987654321",
+        foto: "https://randomuser.me/api/portraits/men/32.jpg"
+      }
 
-   imagen: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",
+    },
 
-   precio: 95000,
+    {
 
-   ubicacion: "Miraflores, Lima",
+      id: 2,
+      tipo: "Casa",
+      imagen: "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800",
+      precio: 175000,
+      ubicacion: "La Molina, Lima",
+      areaConstruida: 160,
+      areaOcupada: 180,
+      asesor: {
+        nombre: "María Pérez",
+        telefono: "912345678",
+        correo: "maria@inmobiliaria.com",
+        whatsapp: "https://wa.me/51912345678",
+        foto: "https://randomuser.me/api/portraits/women/44.jpg"
+      }
 
-   areaConstruida: 85,
+    },
 
-   areaOcupada: 100,
+    {
 
-   asesor: {
+      id: 3,
+      tipo: "Departamento",
+      imagen: "https://images.unsplash.com/photo-1501183638710-841dd1904471?w=800",
+      precio: 110000,
+      ubicacion: "San Isidro, Lima",
+      areaConstruida: 95,
+      areaOcupada: 110,
+      asesor: {
+        nombre: "José Ramírez",
+        telefono: "956789432",
+        correo: "jose@inmobiliaria.com",
+        whatsapp: "https://wa.me/51956789432",
+        foto: "https://randomuser.me/api/portraits/men/76.jpg"
+      }
 
-    nombre: "Carlos López",
+    },
 
-    telefono: "987654321",
+    {
 
-    correo: "carlos@inmobiliaria.com",
+      id: 4,
+      tipo: "Casa",
+      imagen: "https://static.babilonia.pe/assets/img/photo/c6d4c66b-5d7e-4020-997f-782ceff174fd.jpeg",
+      precio: 230000,
+      ubicacion: "Surco, Lima",
+      areaConstruida: 190,
+      areaOcupada: 200,
+      asesor: {
+        nombre: "Lucía Torres",
+        telefono: "934567890",
+        correo: "lucia@inmobiliaria.com",
+        whatsapp: "https://wa.me/51934567890",
+        foto: "https://randomuser.me/api/portraits/women/50.jpg"
+      }
 
-    whatsapp: "https://wa.me/51987654321",
+    }
 
-    foto: "https://randomuser.me/api/portraits/men/32.jpg"
-
-   }
-
-  },
-
-  {
-
-   id: 2,
-
-   tipo: "Casa",
-
-   imagen: "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800",
-
-   precio: 175000,
-
-   ubicacion: "La Molina, Lima",
-
-   areaConstruida: 160,
-
-   areaOcupada: 180,
-
-   asesor: {
-
-    nombre: "María Pérez",
-
-    telefono: "912345678",
-
-    correo: "maria@inmobiliaria.com",
-
-    whatsapp: "https://wa.me/51912345678",
-
-    foto: "https://randomuser.me/api/portraits/women/44.jpg"
-
-   }
-
-  },
-
-  {
-
-   id: 3,
-
-   tipo: "Departamento",
-
-   imagen: "https://images.unsplash.com/photo-1501183638710-841dd1904471?w=800",
-
-   precio: 110000,
-
-   ubicacion: "San Isidro, Lima",
-
-   areaConstruida: 95,
-
-   areaOcupada: 110,
-
-   asesor: {
-
-    nombre: "José Ramírez",
-
-    telefono: "956789432",
-
-    correo: "jose@inmobiliaria.com",
-
-    whatsapp: "https://wa.me/51956789432",
-
-    foto: "https://randomuser.me/api/portraits/men/76.jpg"
-
-   }
-
-  },
-
-  {
-
-   id: 4,
-
-   tipo: "Casa",
-
-   imagen: "https://static.babilonia.pe/assets/img/photo/c6d4c66b-5d7e-4020-997f-782ceff174fd.jpeg",
-
-   precio: 230000,
-
-   ubicacion: "Surco, Lima",
-
-   areaConstruida: 190,
-
-   areaOcupada: 200,
-
-   asesor: {
-
-    nombre: "Lucía Torres",
-
-    telefono: "934567890",
-
-    correo: "lucia@inmobiliaria.com",
-
-    whatsapp: "https://wa.me/51934567890",
-
-    foto: "https://randomuser.me/api/portraits/women/50.jpg"
-
-   }
-
-  }
-
- ]; 
+  ];
 
   const [hovered, setHovered] = useState(null);
   const [usuarioLogueado, setUsuarioLogueado] = useState(false);
