@@ -1,100 +1,162 @@
-import React from "react";
+import React, { useState } from "react";
+import {
+  FaHome,
+  FaUser,
+  FaBuilding,
+  FaPhone,
+  FaCalculator,
+  FaPlus,
+  FaUsers,
+  FaBars,
+  FaTimes,
+  FaSignOutAlt
+} from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { FaHome, FaUser, FaBuilding, FaPhone, FaCalculator, FaPlus, FaUsers } from "react-icons/fa";
-import "./App.css";
-import "./Sidebar.css"; // 👈 Nuevo archivo para estilos mejorados
+import "./Sidebar.css";
 
-function Sidebar({ usuarioLogueado, setContenido }) {
+function Sidebar({ usuarioLogueado, setContenido, setUsuarioLogueado }) {
+  const [abierto, setAbierto] = useState(false);
+
+  const toggleSidebar = () => setAbierto(!abierto);
+
+  const handleClick = (seccion) => {
+    setContenido(seccion);
+    setAbierto(false);
+  };
+
+  const handleLogout = () => {
+    setUsuarioLogueado(false);
+    setAbierto(false);
+    setContenido("inicio");
+  };
+
   return (
-    <div className="sidebar-custom">
-      {/* LOGO */}
-      <div className="sidebar-header text-center mb-4">
-        <img
-          src="/Logo.png" // coloca tu logo dentro de public/logo.png
-          alt="Inmobiliaria Logo"
-          className="sidebar-logo mb-2"
-        />
-        <h4 className="sidebar-title text-warning">INMOBILIARIA</h4>
-      </div>
+    <>
+      {/* Botón hamburguesa */}
+      <button className="btn-toggle" onClick={toggleSidebar}>
+        {abierto ? <FaTimes /> : <FaBars />}
+      </button>
 
-      {/* MENÚ */}
-      <ul className="nav flex-column mt-3">
-        <li className="nav-item mb-2">
-          <a
-            href="#inicio"
-            className="nav-link text-light d-flex align-items-center"
-            onClick={() => setContenido("inicio")}
+      {/* Fondo oscuro */}
+      {abierto && <div className="sidebar-overlay" onClick={toggleSidebar}></div>}
+
+      {/* Sidebar */}
+      <div
+        className={`sidebar-custom ${abierto ? "open" : ""} ${
+          usuarioLogueado ? "propietario" : "visitante"
+        }`}
+      >
+        {/* Header con logo */}
+        <div className="sidebar-header text-center mb-4">
+          <img
+            src="/Logo.png"
+            alt="Inmobiliaria Logo"
+            className={`sidebar-logo mb-2 ${
+              usuarioLogueado ? "logo-propietario" : "logo-visitante"
+            }`}
+          />
+          <h4
+            className={`sidebar-title ${
+              usuarioLogueado ? "titulo-propietario" : "titulo-visitante"
+            }`}
           >
-            <FaHome className="me-2 icon" /> Inicio
-          </a>
-        </li>
+            INMOBILIARIA
+          </h4>
+        </div>
 
-        {!usuarioLogueado && (
+        {/* Menú principal */}
+        <ul className="nav flex-column mt-3 flex-grow-1">
           <li className="nav-item mb-2">
             <a
-              href="#login"
-              className="nav-link text-light d-flex align-items-center"
-              onClick={() => setContenido("login")}
+              href="#inicio"
+              className="nav-link"
+              onClick={() => handleClick("inicio")}
             >
-              <FaUser className="me-2 icon" /> Iniciar Sesión
+              <FaHome className="me-2 icon" /> Inicio
             </a>
           </li>
-        )}
 
-        {usuarioLogueado && (
-          <>
+          {!usuarioLogueado && (
             <li className="nav-item mb-2">
               <a
-                href="#calculo"
-                className="nav-link text-light d-flex align-items-center"
-                onClick={() => setContenido("calculo")}
+                href="#login"
+                className="nav-link"
+                onClick={() => handleClick("login")}
               >
-                <FaCalculator className="me-2 icon" /> Calcular Propiedad
+                <FaUser className="me-2 icon" /> Iniciar Sesión
               </a>
             </li>
-            <li className="nav-item mb-2">
-              <a
-                href="#registro"
-                className="nav-link text-light d-flex align-items-center"
-                onClick={() => setContenido("registro")}
-              >
-                <FaPlus className="me-2 icon" /> Registrar Propiedad
-              </a>
-            </li>
-          </>
-        )}
+          )}
 
-        <li className="nav-item mb-2">
-          <a
-            href="#oficinas"
-            className="nav-link text-light d-flex align-items-center"
-            onClick={() => setContenido("oficinas")}
-          >
-            <FaBuilding className="me-2 icon" /> Oficinas
-          </a>
-        </li>
+          {usuarioLogueado && (
+            <>
+              <li className="nav-item mb-2">
+                <a
+                  href="#calculo"
+                  className="nav-link"
+                  onClick={() => handleClick("calculo")}
+                >
+                  <FaCalculator className="me-2 icon" /> Calcular Propiedad
+                </a>
+              </li>
+              <li className="nav-item mb-2">
+                <a
+                  href="#registro"
+                  className="nav-link"
+                  onClick={() => handleClick("registro")}
+                >
+                  <FaPlus className="me-2 icon" /> Registrar Propiedad
+                </a>
+              </li>
+            </>
+          )}
 
-        <li className="nav-item mb-2">
-          <a
-            href="#asesores"
-            className="nav-link text-light d-flex align-items-center"
-            onClick={() => setContenido("asesores")}
-          >
-            <FaUsers className="me-2 icon" /> Asesores
-          </a>
-        </li>
+          <li className="nav-item mb-2">
+            <a
+              href="#oficinas"
+              className="nav-link"
+              onClick={() => handleClick("oficinas")}
+            >
+              <FaBuilding className="me-2 icon" /> Oficinas
+            </a>
+          </li>
 
-        <li className="nav-item mb-2">
-          <a
-            href="#contactanos"
-            className="nav-link text-light d-flex align-items-center"
-            onClick={() => setContenido("contactanos")}
-          >
-            <FaPhone className="me-2 icon" /> Contáctanos
-          </a>
-        </li>
-      </ul>
-    </div>
+          <li className="nav-item mb-2">
+            <a
+              href="#asesores"
+              className="nav-link"
+              onClick={() => handleClick("asesores")}
+            >
+              <FaUsers className="me-2 icon" /> Asesores
+            </a>
+          </li>
+
+          <li className="nav-item mb-2">
+            <a
+              href="#contactanos"
+              className="nav-link"
+              onClick={() => handleClick("contactanos")}
+            >
+              <FaPhone className="me-2 icon" /> Contáctanos
+            </a>
+          </li>
+        </ul>
+
+        {/* Footer del sidebar */}
+        <div className="sidebar-footer">
+          {usuarioLogueado ? (
+            <>
+              <p className="mb-1">👤 Propietario</p>
+              <button className="btn-logout" onClick={handleLogout}>
+                <FaSignOutAlt className="me-1" /> Cerrar sesión
+              </button>
+            </>
+          ) : (
+            <p>👋 Bienvenido, visitante</p>
+          )}
+        </div>
+      </div>
+    </>
   );
 }
 

@@ -10,7 +10,6 @@ function App() {
   const [usuarioLogueado, setUsuarioLogueado] = useState(false);
   const [contenido, setContenido] = useState("inicio");
 
-  // 🔄 Cargar inmuebles desde el backend
   useEffect(() => {
     fetch("http://localhost:5000/api/inmuebles")
       .then((res) => res.json())
@@ -20,7 +19,12 @@ function App() {
 
   return (
     <div className="app-container d-flex">
-      <Sidebar usuarioLogueado={usuarioLogueado} setContenido={setContenido} />
+      <Sidebar
+       usuarioLogueado={usuarioLogueado}
+       setUsuarioLogueado={setUsuarioLogueado}
+       setContenido={setContenido}
+      />
+
 
       <div className="contenido flex-grow-1 p-4">
         {contenido === "inicio" && (
