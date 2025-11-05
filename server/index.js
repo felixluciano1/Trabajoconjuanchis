@@ -102,6 +102,24 @@ app.post("/api/publicaciones", (req, res) => {
             });
         }
     );
+
+    app.get("/api/departamentos", (req, res) => {
+        const query = `
+      SELECT DISTINCT departamento 
+      FROM inmueble 
+      WHERE departamento IS NOT NULL AND departamento <> ''
+      ORDER BY departamento ASC
+    `;
+
+        db.query(query, (err, results) => {
+            if (err) {
+                console.error("Error al obtener departamentos:", err);
+                return res.status(500).json({ error: "Error al obtener departamentos" });
+            }
+            const departamentos = results.map((row) => row.departamento);
+            res.json(departamentos);
+        });
+    });
 });
 
 app.listen(PORT, () => {
