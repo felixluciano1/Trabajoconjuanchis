@@ -96,31 +96,32 @@ app.get("/api/publicaciones", (req, res) => {
     });
 });
 
-// Insertar nueva publicación
-app.post("/api/publicaciones", (req, res) => {
-    const {
-        foto,
-        ubicacion,
-        superficie_m2,
-        habitaciones,
-        banos,
-        anio_construccion,
-        precio_venta,
-        nombre_propietario,
-        telefono_propietario,
-        correo_propietario,
-        AsesorId,
-    } = req.body;
+app.post("/login", (req, res) => {
+    const { correo, contra } = req.body;
 
-    const query = `
-    INSERT INTO publicacion 
-    (foto, ubicacion, superficie_m2, habitaciones, banos, anio_construccion, precio_venta, nombre_propietario, telefono_propietario, correo_propietario, AsesorId)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `;
+    if (!correo || !contra) {
+        return res.status(400).json({ success: false, message: "Correo y contraseña requeridos" });
+    }
 
-    db.query(
-        query,
-        [
+    const query = "SELECT * FROM cliente WHERE correo = ? AND contra = ?";
+    db.query(query, [correo, contra], (err, results) => {
+        if (err) {
+            console.error("Error al consultar cliente:", err);
+            return res.status(500).json({ success: false, message: "Error del servidor" });
+        }
+
+        if (results.length > 0) {
+            return res.json({ success: true, message: "Login exitoso" });
+        } else {
+            return res.status(401).json({ success: false, message: "Correo o contraseña incorrectos" });
+        }
+    });
+});
+
+
+    // Insertar nueva publicación
+    app.post("/api/publicaciones", (req, res) => {
+        const {
             foto,
             ubicacion,
             superficie_m2,
@@ -132,21 +133,43 @@ app.post("/api/publicaciones", (req, res) => {
             telefono_propietario,
             correo_propietario,
             AsesorId,
-        ],
-        (err, result) => {
-            if (err) {
-                console.error("Error al insertar publicación:", err);
-                return res.status(500).json({ error: "Error al insertar publicación" });
-            }
-            res.json({
-                mensaje: "✅ Publicación agregada correctamente",
-                id: result.insertId,
-            });
-        }
-    );
-});
+        } = req.body;
 
-// Iniciar servidor
-app.listen(PORT, () => {
-    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-});
+        const query = `
+    INSERT INTO publicacion 
+    (foto, ubicacion, superficie_m2, habitaciones, banos, anio_construccion, precio_venta, nombre_propietario, telefono_propietario, correo_propietario, AsesorId)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+
+        db.query(
+            query,
+            [
+                foto,
+                ubicacion,
+                superficie_m2,
+                habitaciones,
+                banos,
+                anio_construccion,
+                precio_venta,
+                nombre_propietario,
+                telefono_propietario,
+                correo_propietario,
+                AsesorId,
+            ],
+            (err, result) => {
+                if (err) {
+                    console.error("Error al insertar publicación:", err);
+                    return res.status(500).json({ error: "Error al insertar publicación" });
+                }
+                res.json({
+                    mensaje: "✅ Publicación agregada correctamente",
+                    id: result.insertId,
+                });
+            }
+        );
+    });
+
+    // Iniciar servidor
+    app.listen(PORT, () => {
+        console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+    });

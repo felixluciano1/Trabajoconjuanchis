@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./LoginForm.css"; // Asegúrate de tener el CSS que te pasé antes
 
 function LoginForm({ onLoginSuccess }) {
   const [email, setEmail] = useState("");
@@ -29,37 +30,43 @@ function LoginForm({ onLoginSuccess }) {
   };
 
   return (
-    <div className="container mt-5">
-      <h3 className="text-center mb-4">Iniciar Sesión</h3>
-      <form onSubmit={handleSubmit} className="w-50 mx-auto">
-        <div className="mb-3">
-          <label className="form-label">Correo electrónico</label>
-          <input
-            type="email"
-            className="form-control"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
+    <div className="login-container">
+      <div className="login-card">
+        <h3>Iniciar Sesión</h3>
 
-        <div className="mb-3">
-          <label className="form-label">Contraseña</label>
-          <input
-            type="password"
-            className="form-control"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
+        {/* Alerta de error */}
+        {error && <div className="alert alert-danger">{error}</div>}
 
-        {error && <p className="text-danger text-center">{error}</p>}
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label className="form-label">Correo electrónico</label>
+            <input
+              type="email"
+              className="form-control"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="ejemplo@correo.com"
+              required
+            />
+          </div>
 
-        <button type="submit" className="btn btn-primary w-100">
-          Ingresar
-        </button>
-      </form>
+          <div className="mb-3">
+            <label className="form-label">Contraseña</label>
+            <input
+              type="password"
+              className="form-control"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="********"
+              required
+            />
+          </div>
+
+          <button type="submit" className="btn btn-primary w-100">
+            Ingresar
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

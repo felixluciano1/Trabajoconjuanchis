@@ -1,0 +1,74 @@
+/* Contenedor principal del login */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Card del formulario */
+.login-card {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+  transition: transform 0.3s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Título */
+.login-card h3 {
+  font-weight: 600;
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+/* Inputs */
+.login-card .form-control {
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.login-card .form-control:focus {
+  border-color: #2575fc;
+  box-shadow: 0 0 5px rgba(37, 117, 252, 0.5);
+}
+
+/* Botón de login */
+.login-card .btn-primary {
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.login-card .btn-primary:hover {
+  background-color: #1a5bdc;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Alertas de error */
+.login-card .alert {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* Labels */
+.login-card .form-label {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+/* Para móviles */
+@media (max-width: 576px) {
+  .login-card {
+    padding: 1.5rem;
+  }
+}
