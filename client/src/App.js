@@ -11,49 +11,33 @@ function App() {
   const [contenido, setContenido] = useState("inicio");
 
   // Estados del buscador
-  const [filtro, setFiltro] = useState("Comprar"); 
+  const [filtro, setFiltro] = useState("Comprar");
   const [busqueda, setBusqueda] = useState("");
   const [departamentos, setDepartamentos] = useState([]);
   const [departamentoSeleccionado, setDepartamentoSeleccionado] = useState("");
   const [sugerencias, setSugerencias] = useState([]);
 
-  // Cargar propiedades al inicio
+  // Cargar propiedades
   useEffect(() => {
     fetch("http://localhost:5000/api/inmuebles")
       .then((res) => res.json())
-      .then((data) => setPropiedades(data))
+      .then((data) => setPropiedades(Array.isArray(data) ? data : []))
       .catch((err) => console.error("Error al cargar propiedades:", err));
   }, []);
 
-  // Cargar departamentos dinámicamente
+  // Cargar departamentos
   useEffect(() => {
     fetch("http://localhost:5000/api/departamentos")
       .then((res) => res.json())
-      .then((data) => setDepartamentos(data))
+      .then((data) => setDepartamentos(Array.isArray(data) ? data : []))
       .catch((err) => console.error("Error al obtener departamentos:", err));
   }, []);
 
-  // Filtrar sugerencias dinámicas desde la tabla `inmueble`
-  useEffect(() => {
-    if (busqueda.length > 0) {
-      const filtradas = propiedades
-        .map((p) => p.ubicacion)
-        .filter((u) =>
-          u.toLowerCase().includes(busqueda.toLowerCase())
-        );
-      setSugerencias([...new Set(filtradas)]); // elimina duplicados
-    } else {
-      setSugerencias([]);
-    }
-  }, [busqueda, propiedades]);
-
-  // Manejar búsqueda
   const manejarBusqueda = (e) => {
     e.preventDefault();
     console.log("🔎 Acción:", filtro);
     console.log("🔎 Ubicación:", busqueda);
     console.log("🏙️ Departamento:", departamentoSeleccionado);
-    // Redirigir a formulario de cálculo
     setContenido("calculo");
   };
 
@@ -81,7 +65,8 @@ function App() {
                     <button
                       key={tipo}
                       type="button"
-                      className={`btn ${filtro === tipo ? "btn-primary" : "btn-outline-primary"} px-4`}
+                      className={`btn ${filtro === tipo ? "btn-primary" : "btn-outline-primary"
+                        } px-4`}
                       onClick={() => setFiltro(tipo)}
                     >
                       {tipo}
@@ -89,18 +74,32 @@ function App() {
                   ))}
                 </div>
 
-                {/* Buscador dinámico */}
+                {/* Formulario de búsqueda */}
                 <form
                   onSubmit={manejarBusqueda}
                   className="d-flex align-items-center gap-3 flex-wrap"
                 >
-                  <div style={{ position: "relative", flex: 1, maxWidth: "320px" }}>
+                  <div
+                    style={{ position: "relative", flex: 1, maxWidth: "320px" }}
+                  >
                     <input
                       type="text"
                       className="form-control buscador-input"
                       placeholder="Buscar ubicación..."
                       value={busqueda}
-                      onChange={(e) => setBusqueda(e.target.value)}
+                      onChange={(e) => {
+                        setBusqueda(e.target.value);
+                        if (e.target.value.length > 0) {
+                          const filtradas = (propiedades || [])
+                            .map((p) => p.ubicacion)
+                            .filter((u) =>
+                              u.toLowerCase().includes(e.target.value.toLowerCase())
+                            );
+                          setSugerencias([...new Set(filtradas)]);
+                        } else {
+                          setSugerencias([]);
+                        }
+                      }}
                     />
                     {sugerencias.length > 0 && (
                       <ul
@@ -124,14 +123,13 @@ function App() {
                     )}
                   </div>
 
-                  {/* Select de departamentos al costado */}
                   <select
                     className="form-select w-auto"
                     value={departamentoSeleccionado}
                     onChange={(e) => setDepartamentoSeleccionado(e.target.value)}
                   >
                     <option value="">Departamentos</option>
-                    {departamentos.map((dep, i) => (
+                    {(departamentos || []).map((dep, i) => (
                       <option key={i} value={dep}>
                         {dep}
                       </option>
@@ -151,59 +149,57 @@ function App() {
             </h2>
 
             <div className="row">
-              {propiedades.map((prop) => (
-                <div
-                  className="col-md-3 mb-4"
-                  key={prop.InmuebleId}
-                  onMouseEnter={() => setHovered(prop.InmuebleId)}
-                  onMouseLeave={() => setHovered(null)}
-                  style={{ position: "relative" }}
-                >
-                  <div className="card propiedad-card shadow-lg border-0">
-                    <img
-                      src={prop.imagen}
-                      className="card-img-top propiedad-img"
-                      alt={prop.tipo}
-                    />
-                    <div className="card-body">
-                      <h5 className="card-title text-primary">{prop.tipo}</h5>
-                      <p>
-                        <strong>Precio:</strong> ${prop.precio}
-                      </p>
-                      <p>
-                        <strong>Ubicación:</strong> {prop.ubicacion}
-                      </p>
-                      <p>
-                        <strong>Área construida:</strong> {prop.areaConstruida} m²
-                      </p>
-                      <p>
-                        <strong>Área ocupada:</strong> {prop.areaOcupada} m²
-                      </p>
-                    </div>
-
-                    {hovered === prop.InmuebleId && (
-                      <div className="overlay-asesor d-flex flex-column justify-content-center align-items-center text-white">
-                        <img
-                          src={prop.asesor_foto}
-                          alt={prop.asesor_nombre}
-                          className="asesor-foto mb-2"
-                        />
-                        <h6>{prop.asesor_nombre}</h6>
-                        <p className="mb-1">Tel: {prop.asesor_telefono}</p>
-                        <p className="mb-1">{prop.asesor_correo}</p>
-                        <a
-                          href={prop.asesor_whatsapp}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn btn-success btn-sm mt-2"
-                        >
-                          WhatsApp
-                        </a>
+              {Array.isArray(propiedades) &&
+                propiedades.map((prop) => (
+                  <div
+                    className="col-md-3 mb-4"
+                    key={prop.InmuebleId}
+                    onMouseEnter={() => setHovered(prop.InmuebleId)}
+                    onMouseLeave={() => setHovered(null)}
+                    style={{ position: "relative" }}
+                  >
+                    <div className="card propiedad-card shadow-lg border-0">
+                      <img
+                        src={prop.imagen}
+                        className="card-img-top propiedad-img"
+                        alt={prop.tipo}
+                      />
+                      <div className="card-body">
+                        <h5 className="card-title text-primary">{prop.tipo}</h5>
+                        <p>
+                          <strong>Precio:</strong> ${prop.precio}
+                        </p>
+                        <p>
+                          <strong>Ubicación:</strong> {prop.ubicacion}
+                        </p>
+                        <p>
+                          <strong>Área construida:</strong> {prop.areaConstruida} m²
+                        </p>
                       </div>
-                    )}
+
+                      {hovered === prop.InmuebleId && prop.asesor_nombre && (
+                        <div className="overlay-asesor d-flex flex-column justify-content-center align-items-center text-white">
+                          <img
+                            src={prop.asesor_foto}
+                            alt={prop.asesor_nombre}
+                            className="asesor-foto mb-2"
+                          />
+                          <h6>{prop.asesor_nombre}</h6>
+                          <p className="mb-1">Tel: {prop.asesor_telefono}</p>
+                          <p className="mb-1">{prop.asesor_correo}</p>
+                          <a
+                            href={prop.asesor_whatsapp}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-success btn-sm mt-2"
+                          >
+                            WhatsApp
+                          </a>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         )}
@@ -221,3 +217,4 @@ function App() {
 }
 
 export default App;
+

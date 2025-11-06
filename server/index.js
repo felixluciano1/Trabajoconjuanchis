@@ -49,13 +49,23 @@ app.get("/api/departamentos", (req, res) => {
 });
 
 // Ruta para obtener inmuebles, filtrando por ubicación si se pasa query
+// Ruta para obtener inmuebles con datos del asesor
 app.get("/api/inmuebles", (req, res) => {
     const { ubicacion } = req.query;
-    let sql = "SELECT * FROM inmueble";
+    let sql = `
+      SELECT i.*, 
+             a.nombre AS asesor_nombre,
+             a.telefono AS asesor_telefono,
+             a.correo AS asesor_correo,
+             a.whatsapp AS asesor_whatsapp,
+             a.foto AS asesor_foto
+      FROM inmueble i
+      LEFT JOIN asesor a ON i.AsesorId = a.AsesorId
+    `;
     const params = [];
 
     if (ubicacion) {
-        sql += " WHERE ubicacion LIKE ?";
+        sql += " WHERE i.ubicacion LIKE ?";
         params.push(`%${ubicacion}%`);
     }
 
@@ -119,9 +129,31 @@ app.post("/login", (req, res) => {
 });
 
 
-    // Insertar nueva publicación
-    app.post("/api/publicaciones", (req, res) => {
-        const {
+// Insertar nueva publicación
+app.post("/api/publicaciones", (req, res) => {
+    const {
+        foto,
+        ubicacion,
+        superficie_m2,
+        habitaciones,
+        banos,
+        anio_construccion,
+        precio_venta,
+        nombre_propietario,
+        telefono_propietario,
+        correo_propietario,
+        AsesorId,
+    } = req.body;
+
+    const query = `
+    INSERT INTO publicacion 
+    (foto, ubicacion, superficie_m2, habitaciones, banos, anio_construccion, precio_venta, nombre_propietario, telefono_propietario, correo_propietario, AsesorId)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+
+    db.query(
+        query,
+        [
             foto,
             ubicacion,
             superficie_m2,
@@ -133,43 +165,21 @@ app.post("/login", (req, res) => {
             telefono_propietario,
             correo_propietario,
             AsesorId,
-        } = req.body;
-
-        const query = `
-    INSERT INTO publicacion 
-    (foto, ubicacion, superficie_m2, habitaciones, banos, anio_construccion, precio_venta, nombre_propietario, telefono_propietario, correo_propietario, AsesorId)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `;
-
-        db.query(
-            query,
-            [
-                foto,
-                ubicacion,
-                superficie_m2,
-                habitaciones,
-                banos,
-                anio_construccion,
-                precio_venta,
-                nombre_propietario,
-                telefono_propietario,
-                correo_propietario,
-                AsesorId,
-            ],
-            (err, result) => {
-                if (err) {
-                    console.error("Error al insertar publicación:", err);
-                    return res.status(500).json({ error: "Error al insertar publicación" });
-                }
-                res.json({
-                    mensaje: "✅ Publicación agregada correctamente",
-                    id: result.insertId,
-                });
+        ],
+        (err, result) => {
+            if (err) {
+                console.error("Error al insertar publicación:", err);
+                return res.status(500).json({ error: "Error al insertar publicación" });
             }
-        );
-    });
+            res.json({
+                mensaje: "✅ Publicación agregada correctamente",
+                id: result.insertId,
+            });
+        }
+    );
+});
 
-    // Iniciar servidor
-    app.listen(PORT, () => {
-        console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-    });
+// Iniciar servidor
+app.listen(PORT, () => {
+    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+});
