@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "./sidebar";
 import FormularioCalculo from "./components/FormularioCalculo";
 import LoginForm from "./components/LoginForm";
+import PublicForm from "./components/PublicForm";
 import "./App.css";
 
 function App() {
   const [propiedades, setPropiedades] = useState([]);
   const [hovered, setHovered] = useState(null);
   const [usuarioLogueado, setUsuarioLogueado] = useState(false);
+  const [usuario, setUsuario] = useState(null); // Usuario completo
   const [contenido, setContenido] = useState("inicio");
 
   // Estados del buscador
@@ -35,31 +37,44 @@ function App() {
 
   const manejarBusqueda = (e) => {
     e.preventDefault();
-    console.log("🔎 Acción:", filtro);
-    console.log("🔎 Ubicación:", busqueda);
-    console.log("🏙️ Departamento:", departamentoSeleccionado);
     setContenido("calculo");
+  };
+
+  const handlePublicar = () => {
+    if (usuarioLogueado) {
+      setContenido("publicar");
+    } else {
+      setContenido("login");
+    }
   };
 
   return (
     <div className="app-container d-flex">
       <Sidebar
         usuarioLogueado={usuarioLogueado}
-        setUsuarioLogueado={setUsuarioLogueado}
+        usuario={usuario} // Pasamos el usuario al sidebar
         setContenido={setContenido}
+        setUsuarioLogueado={setUsuarioLogueado}
       />
 
       <div className="contenido flex-grow-1 p-4">
         {contenido === "inicio" && (
           <div className="container mt-4">
-            {/* Buscador */}
+            <div className="mb-3 text-center">
+              <button
+                className="btn btn-warning px-4"
+                onClick={handlePublicar}
+              >
+                Publicar Propiedad
+              </button>
+            </div>
+
             <div className="card shadow-sm mb-4">
               <div className="card-body">
                 <h4 className="text-center text-primary mb-3">
                   Encuentra tu Hogar
                 </h4>
 
-                {/* Botones Comprar / Alquilar */}
                 <div className="d-flex justify-content-center gap-3 mb-3 flex-wrap">
                   {["Comprar", "Alquilar"].map((tipo) => (
                     <button
@@ -74,7 +89,6 @@ function App() {
                   ))}
                 </div>
 
-                {/* Formulario de búsqueda */}
                 <form
                   onSubmit={manejarBusqueda}
                   className="d-flex align-items-center gap-3 flex-wrap"
@@ -143,7 +157,6 @@ function App() {
               </div>
             </div>
 
-            {/* Listado de propiedades */}
             <h2 className="text-center mb-4 titulo">
               Propiedades en venta o renta
             </h2>
@@ -205,16 +218,23 @@ function App() {
         )}
 
         {contenido === "login" && (
-          <LoginForm onLoginSuccess={() => setUsuarioLogueado(true)} />
+          <LoginForm
+            onLoginSuccess={(usuarioData) => {
+              setUsuario(usuarioData);
+              setUsuarioLogueado(true);
+              setContenido("inicio");
+            }}
+          />
         )}
+
         {contenido === "calculo" && <FormularioCalculo />}
         {contenido === "registro" && (
           <div>Formulario de registro de propiedad (a implementar)</div>
         )}
+        {contenido === "publicar" && <PublicForm />}
       </div>
     </div>
   );
 }
 
 export default App;
-

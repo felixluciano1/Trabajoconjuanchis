@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import "./LoginForm.css"; // Asegúrate de tener el CSS que te pasé antes
+import "./LoginForm.css";
 
 function LoginForm({ onLoginSuccess }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [correo, setCorreo] = useState("");
+  const [contra, setContra] = useState("");
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
@@ -11,16 +11,20 @@ function LoginForm({ onLoginSuccess }) {
     setError("");
 
     try {
-      const res = await fetch("http://localhost:5000/login", {
+      const res = await fetch("http://localhost:5000/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ correo, contra }),
       });
 
       const data = await res.json();
 
       if (data.success) {
-        onLoginSuccess(); 
+        onLoginSuccess({
+          nombre: data.usuario.nombre,
+          correo: data.usuario.correo,
+          foto: data.usuario.foto || "",
+        });
       } else {
         setError(data.message);
       }
@@ -33,37 +37,33 @@ function LoginForm({ onLoginSuccess }) {
     <div className="login-container">
       <div className="login-card">
         <h3>Iniciar Sesión</h3>
-
-        {/* Alerta de error */}
         {error && <div className="alert alert-danger">{error}</div>}
 
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label className="form-label">Correo electrónico</label>
+            <label>Correo</label>
             <input
               type="email"
               className="form-control"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="ejemplo@correo.com"
+              value={correo}
+              onChange={(e) => setCorreo(e.target.value)}
               required
             />
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Contraseña</label>
+            <label>Contraseña</label>
             <input
               type="password"
               className="form-control"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="********"
+              value={contra}
+              onChange={(e) => setContra(e.target.value)}
               required
             />
           </div>
 
           <button type="submit" className="btn btn-primary w-100">
-            Ingresar
+            Iniciar Sesión
           </button>
         </form>
       </div>

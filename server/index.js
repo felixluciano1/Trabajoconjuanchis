@@ -1,6 +1,7 @@
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
+const bcrypt = require("bcryptjs"); // Para encriptar y comparar contraseñas
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -29,15 +30,14 @@ app.get("/", (req, res) => {
     res.send("Servidor backend de inmobiliaria funcionando correctamente");
 });
 
-// Ruta para obtener departamentos únicos
+// Obtener departamentos únicos
 app.get("/api/departamentos", (req, res) => {
     const query = `
-      SELECT DISTINCT departamento 
-      FROM inmueble 
-      WHERE departamento IS NOT NULL AND departamento <> ''
-      ORDER BY departamento ASC
-    `;
-
+    SELECT DISTINCT departamento 
+    FROM inmueble 
+    WHERE departamento IS NOT NULL AND departamento <> ''
+    ORDER BY departamento ASC
+  `;
     db.query(query, (err, results) => {
         if (err) {
             console.error("Error al obtener departamentos:", err);
@@ -48,20 +48,19 @@ app.get("/api/departamentos", (req, res) => {
     });
 });
 
-// Ruta para obtener inmuebles, filtrando por ubicación si se pasa query
-// Ruta para obtener inmuebles con datos del asesor
+// Obtener inmuebles con datos del asesor
 app.get("/api/inmuebles", (req, res) => {
     const { ubicacion } = req.query;
     let sql = `
-      SELECT i.*, 
-             a.nombre AS asesor_nombre,
-             a.telefono AS asesor_telefono,
-             a.correo AS asesor_correo,
-             a.whatsapp AS asesor_whatsapp,
-             a.foto AS asesor_foto
-      FROM inmueble i
-      LEFT JOIN asesor a ON i.AsesorId = a.AsesorId
-    `;
+    SELECT i.*, 
+           a.nombre AS asesor_nombre,
+           a.telefono AS asesor_telefono,
+           a.correo AS asesor_correo,
+           a.whatsapp AS asesor_whatsapp,
+           a.foto AS asesor_foto
+    FROM inmueble i
+    LEFT JOIN asesor a ON i.AsesorId = a.AsesorId
+  `;
     const params = [];
 
     if (ubicacion) {
@@ -78,7 +77,7 @@ app.get("/api/inmuebles", (req, res) => {
     });
 });
 
-// Rutas de publicaciones existentes
+// Obtener publicaciones
 app.get("/api/publicaciones", (req, res) => {
     const query = `
     SELECT 
@@ -106,28 +105,67 @@ app.get("/api/publicaciones", (req, res) => {
     });
 });
 
-app.post("/login", (req, res) => {
+// Crear nuevo cliente (registrar usuarios)
+app.post("/api/cliente", async (req, res) => {
+    const { nombre, correo, contra, telefono } = req.body;
+
+    if (!nombre || !correo || !contra) {
+        return res.status(400).json({ error: "Nombre, correo y contraseña son requeridos" });
+    }
+
+    try {
+        const hashedPassword = await bcrypt.hash(contra, 10);
+
+        const query = `INSERT INTO cliente (nombre, correo, contra, telefono) VALUES (?, ?, ?, ?)`;
+        db.query(query, [nombre, correo, hashedPassword, telefono || null], (err, result) => {
+            if (err) {
+                console.error("Error al registrar cliente:", err);
+                return res.status(500).json({ error: "Error al registrar cliente" });
+            }
+            res.json({ mensaje: "✅ Cliente registrado correctamente", id: result.insertId });
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Error en el servidor" });
+    }
+});
+
+// Login seguro
+app.post("/api/login", (req, res) => {
     const { correo, contra } = req.body;
 
     if (!correo || !contra) {
         return res.status(400).json({ success: false, message: "Correo y contraseña requeridos" });
     }
 
-    const query = "SELECT * FROM cliente WHERE correo = ? AND contra = ?";
-    db.query(query, [correo, contra], (err, results) => {
+    const query = "SELECT * FROM cliente WHERE correo = ?";
+    db.query(query, [correo], async (err, results) => {
         if (err) {
             console.error("Error al consultar cliente:", err);
             return res.status(500).json({ success: false, message: "Error del servidor" });
         }
 
-        if (results.length > 0) {
-            return res.json({ success: true, message: "Login exitoso" });
-        } else {
+        if (results.length === 0) {
             return res.status(401).json({ success: false, message: "Correo o contraseña incorrectos" });
+        }
+
+        const usuario = results[0];
+
+        try {
+            const passwordMatch = await bcrypt.compare(contra, usuario.contra);
+
+            if (!passwordMatch) {
+                return res.status(401).json({ success: false, message: "Correo o contraseña incorrectos" });
+            }
+
+            // Login exitoso
+            res.json({ success: true, message: "Login exitoso", usuario });
+        } catch (err) {
+            console.error("Error al comparar contraseñas:", err);
+            res.status(500).json({ success: false, message: "Error del servidor" });
         }
     });
 });
-
 
 // Insertar nueva publicación
 app.post("/api/publicaciones", (req, res) => {
