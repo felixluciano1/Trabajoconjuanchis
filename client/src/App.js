@@ -231,7 +231,8 @@ function App() {
         {contenido === "registro" && (
           <div>Formulario de registro de propiedad (a implementar)</div>
         )}
-        {contenido === "publicar" && <PublicForm />}
+        {contenido === "publicar" && usuarioLogueado && <PublicForm />}
+
       </div>
     </div>
   );
