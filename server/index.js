@@ -33,11 +33,11 @@ app.get("/", (req, res) => {
 // Obtener departamentos únicos
 app.get("/api/departamentos", (req, res) => {
     const query = `
-    SELECT DISTINCT departamento 
-    FROM inmueble 
-    WHERE departamento IS NOT NULL AND departamento <> ''
-    ORDER BY departamento ASC
-  `;
+        SELECT DISTINCT departamento 
+        FROM inmueble 
+        WHERE departamento IS NOT NULL AND departamento <> ''
+        ORDER BY departamento ASC
+    `;
     db.query(query, (err, results) => {
         if (err) {
             console.error("Error al obtener departamentos:", err);
@@ -52,15 +52,15 @@ app.get("/api/departamentos", (req, res) => {
 app.get("/api/inmuebles", (req, res) => {
     const { ubicacion } = req.query;
     let sql = `
-    SELECT i.*, 
-           a.nombre AS asesor_nombre,
-           a.telefono AS asesor_telefono,
-           a.correo AS asesor_correo,
-           a.whatsapp AS asesor_whatsapp,
-           a.foto AS asesor_foto
-    FROM inmueble i
-    LEFT JOIN asesor a ON i.AsesorId = a.AsesorId
-  `;
+        SELECT i.*, 
+            a.nombre AS asesor_nombre,
+            a.telefono AS asesor_telefono,
+            a.correo AS asesor_correo,
+            a.whatsapp AS asesor_whatsapp,
+            a.foto AS asesor_foto
+        FROM inmueble i
+        LEFT JOIN asesor a ON i.AsesorId = a.AsesorId
+    `;
     const params = [];
 
     if (ubicacion) {
@@ -80,22 +80,22 @@ app.get("/api/inmuebles", (req, res) => {
 // Obtener publicaciones
 app.get("/api/publicaciones", (req, res) => {
     const query = `
-    SELECT 
-      p.PublicacionId,
-      p.foto,
-      p.ubicacion,
-      p.superficie_m2,
-      p.habitaciones,
-      p.banos,
-      p.anio_construccion,
-      p.precio_venta,
-      p.nombre_propietario,
-      p.telefono_propietario,
-      p.correo_propietario,
-      a.nombre AS asesor
-    FROM publicacion p
-    LEFT JOIN asesor a ON p.AsesorId = a.AsesorId
-  `;
+        SELECT 
+            p.PublicacionId,
+            p.foto,
+            p.ubicacion,
+            p.superficie_m2,
+            p.habitaciones,
+            p.banos,
+            p.anio_construccion,
+            p.precio_venta,
+            p.nombre_propietario,
+            p.telefono_propietario,
+            p.correo_propietario,
+            a.nombre AS asesor
+        FROM publicacion p
+        LEFT JOIN asesor a ON p.AsesorId = a.AsesorId
+    `;
     db.query(query, (err, results) => {
         if (err) {
             console.error("Error al obtener publicaciones:", err);
@@ -105,32 +105,52 @@ app.get("/api/publicaciones", (req, res) => {
     });
 });
 
-// Crear nuevo cliente (registrar usuarios)
-app.post("/api/cliente", async (req, res) => {
-    const { nombre, correo, contra, telefono } = req.body;
+/* ============================================================
+   🔹 REGISTRO DE NUEVO CLIENTE
+   ============================================================ */
+app.post("/api/registrar", async (req, res) => {
+    const { nombre, telefono, correo, contra } = req.body;
 
     if (!nombre || !correo || !contra) {
-        return res.status(400).json({ error: "Nombre, correo y contraseña son requeridos" });
+        return res.status(400).json({ success: false, message: "Faltan campos obligatorios" });
     }
 
     try {
-        const hashedPassword = await bcrypt.hash(contra, 10);
-
-        const query = `INSERT INTO cliente (nombre, correo, contra, telefono) VALUES (?, ?, ?, ?)`;
-        db.query(query, [nombre, correo, hashedPassword, telefono || null], (err, result) => {
+        // Verificar si el correo ya existe
+        const verificarQuery = "SELECT * FROM cliente WHERE correo = ?";
+        db.query(verificarQuery, [correo], async (err, results) => {
             if (err) {
-                console.error("Error al registrar cliente:", err);
-                return res.status(500).json({ error: "Error al registrar cliente" });
+                console.error("Error al verificar correo:", err);
+                return res.status(500).json({ success: false, message: "Error del servidor" });
             }
-            res.json({ mensaje: "✅ Cliente registrado correctamente", id: result.insertId });
+
+            if (results.length > 0) {
+                return res.status(400).json({ success: false, message: "El correo ya está registrado" });
+            }
+
+            const hashedPassword = await bcrypt.hash(contra, 10);
+            const insertQuery = `
+                INSERT INTO cliente (nombre, telefono, correo, contra) 
+                VALUES (?, ?, ?, ?)
+            `;
+
+            db.query(insertQuery, [nombre, telefono, correo, hashedPassword], (err, result) => {
+                if (err) {
+                    console.error("Error al registrar cliente:", err);
+                    return res.status(500).json({ success: false, message: "Error al registrar cliente" });
+                }
+                res.json({ success: true, message: "✅ Registro exitoso", id: result.insertId });
+            });
         });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Error en el servidor" });
+    } catch (error) {
+        console.error("Error en registro:", error);
+        res.status(500).json({ success: false, message: "Error del servidor" });
     }
 });
 
-// Login seguro
+/* ============================================================
+   🔹 LOGIN SEGURO DE CLIENTES
+   ============================================================ */
 app.post("/api/login", (req, res) => {
     const { correo, contra } = req.body;
 
@@ -159,7 +179,17 @@ app.post("/api/login", (req, res) => {
             }
 
             // Login exitoso
-            res.json({ success: true, message: "Login exitoso", usuario });
+            res.json({
+                success: true,
+                message: "✅ Inicio de sesión exitoso",
+                usuario: {
+                    ClienteId: usuario.ClienteId,
+                    nombre: usuario.nombre,
+                    correo: usuario.correo,
+                    telefono: usuario.telefono,
+                    fechaRegistro: usuario.fechaRegistro,
+                },
+            });
         } catch (err) {
             console.error("Error al comparar contraseñas:", err);
             res.status(500).json({ success: false, message: "Error del servidor" });
@@ -167,7 +197,9 @@ app.post("/api/login", (req, res) => {
     });
 });
 
-// Insertar nueva publicación
+/* ============================================================
+   🔹 INSERTAR NUEVA PUBLICACIÓN
+   ============================================================ */
 app.post("/api/publicaciones", (req, res) => {
     const {
         foto,
@@ -184,10 +216,10 @@ app.post("/api/publicaciones", (req, res) => {
     } = req.body;
 
     const query = `
-    INSERT INTO publicacion 
-    (foto, ubicacion, superficie_m2, habitaciones, banos, anio_construccion, precio_venta, nombre_propietario, telefono_propietario, correo_propietario, AsesorId)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `;
+        INSERT INTO publicacion 
+        (foto, ubicacion, superficie_m2, habitaciones, banos, anio_construccion, precio_venta, nombre_propietario, telefono_propietario, correo_propietario, AsesorId)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
 
     db.query(
         query,
