@@ -49,6 +49,8 @@ const FormularioCalculo = () => {
   };
 
   return (
+    <>
+    <div className="calculo-fondo"></div>
     <div className="calculo-container">
       <h2>🏡 Estimador de Precio de Propiedad</h2>
       <p className="subtitulo">Ingresa los datos del inmueble para obtener una estimación.</p>
@@ -134,6 +136,7 @@ const FormularioCalculo = () => {
         </div>
       )}
     </div>
+  </>
   );
 };
 

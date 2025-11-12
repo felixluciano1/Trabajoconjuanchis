@@ -84,7 +84,7 @@ function Sidebar({ usuarioLogueado, usuario, setContenido, setUsuarioLogueado })
             </li>
             <li className="nav-item mb-2">
               <a href="#registro" className="nav-link" onClick={() => handleClick("registro")}>
-                <FaPlus className="me-2 icon" /> Registrar Propiedad
+                <FaPlus className="me-2 icon" /> Publicar Propiedad
               </a>
             </li>
           </>

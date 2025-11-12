@@ -1,3 +1,30 @@
+/* 🔹 Fondo profesional animado SOLO visible en FormularioCalculo */
+.calculo-fondo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    #d3d3d3,   /* gris claro (inicio) */
+    #b0b0b0,   /* gris medio */
+    #8a0000    /* rojo oscuro elegante (final) */
+  );
+  background-attachment: fixed;
+  background-size: 200% 200%;
+  animation: suaveMovimiento 25s ease-in-out infinite;
+  z-index: -1; /* Mantiene el fondo detrás del formulario */
+}
+
+/* ✨ Movimiento sutil y elegante del fondo */
+@keyframes suaveMovimiento {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* 🔸 Estilo del formulario */
 .calculo-container {
   max-width: 500px;
   margin: 60px auto;
@@ -7,6 +34,8 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   font-family: "Poppins", sans-serif;
   transition: all 0.3s ease;
+  position: relative;
+  z-index: 1; /* Para estar sobre el fondo animado */
 }
 
 h2 {
@@ -51,7 +80,7 @@ label {
 }
 
 .btn-calcular {
-  background: linear-gradient(135deg, #1565c0, #003366);
+  background: linear-gradient(180deg, #5a0000 0%, #8b0000 100%);
   color: white;
   border: none;
   padding: 12px;
