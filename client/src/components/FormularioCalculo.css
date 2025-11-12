@@ -51,7 +51,7 @@ label {
 }
 
 .btn-calcular {
-  background: linear-gradient(135deg, #1565c0, #003366);
+  background: linear-gradient(180deg, #5a0000 0%, #8b0000 100%);
   color: white;
   border: none;
   padding: 12px;
@@ -85,3 +85,4 @@ label {
   font-size: 1.1rem;
   box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
 }
+
