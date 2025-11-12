@@ -4,7 +4,10 @@ import FormularioCalculo from "./components/FormularioCalculo";
 import LoginForm from "./components/LoginForm";
 import PublicForm from "./components/PublicForm";
 import Buscador from "./components/Buscador";
-import Oficinas from "./components/Oficinas"; // ✅ Importado
+import Oficinas from "./components/Oficinas"; 
+import Asesores from "./components/Asesores";
+import Contacto from "./components/Contacto";
+
 
 import "./App.css";
 
@@ -140,14 +143,19 @@ function App() {
           />
         )}
 
-        {/* 🧮 CÁLCULO */}
+     
         {contenido === "calculo" && <FormularioCalculo />}
 
-        {/* 🏢 PUBLICAR */}
         {contenido === "publicar" && usuarioLogueado && <PublicForm />}
-
-        {/* 🏢 OFICINAS (nuevo) */}
+      
         {contenido === "oficinas" && <Oficinas />} 
+
+        {contenido === "asesores" && <Asesores />}
+
+        {contenido === "contactanos" && <Contacto />}
+
+
+
       </div>
     </div>
   );
