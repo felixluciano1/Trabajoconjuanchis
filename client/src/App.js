@@ -50,11 +50,8 @@ function App() {
 
       {/* 🔹 CONTENIDO PRINCIPAL */}
       <div className="contenido flex-grow-1 p-4">
-<<<<<<< HEAD
-=======
 
         {/* 🏠 INICIO */}
->>>>>>> origin/main
         {contenido === "inicio" && (
           <div className="container mt-4">
             <div className="mb-3 text-center">
@@ -149,18 +146,9 @@ function App() {
           />
         )}
 
-<<<<<<< HEAD
-        {contenido === "calculo" && <FormularioCalculo />}
-
-        {contenido === "registro" && (
-          <div>Formulario de registro de propiedad (a implementar)</div>
-        )}
-
-=======
      
         {contenido === "calculo" && <FormularioCalculo />}
 
->>>>>>> origin/main
         {contenido === "publicar" && usuarioLogueado && <PublicForm />}
       
         {contenido === "oficinas" && <Oficinas />} 
