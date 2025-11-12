@@ -3,42 +3,29 @@ import Sidebar from "./sidebar";
 import FormularioCalculo from "./components/FormularioCalculo";
 import LoginForm from "./components/LoginForm";
 import PublicForm from "./components/PublicForm";
+import Buscador from "./components/Buscador";
+
 import "./App.css";
 
 function App() {
   const [propiedades, setPropiedades] = useState([]);
+  const [propiedadesOriginales, setPropiedadesOriginales] = useState([]);
   const [hovered, setHovered] = useState(null);
   const [usuarioLogueado, setUsuarioLogueado] = useState(false);
-  const [usuario, setUsuario] = useState(null); // Usuario completo
+  const [usuario, setUsuario] = useState(null);
   const [contenido, setContenido] = useState("inicio");
 
-  // Estados del buscador
-  const [filtro, setFiltro] = useState("Comprar");
-  const [busqueda, setBusqueda] = useState("");
-  const [departamentos, setDepartamentos] = useState([]);
-  const [departamentoSeleccionado, setDepartamentoSeleccionado] = useState("");
-  const [sugerencias, setSugerencias] = useState([]);
-
-  // Cargar propiedades
+  // 🔹 Cargar propiedades desde backend
   useEffect(() => {
     fetch("http://localhost:5000/api/inmuebles")
       .then((res) => res.json())
-      .then((data) => setPropiedades(Array.isArray(data) ? data : []))
+      .then((data) => {
+        const props = Array.isArray(data) ? data : [];
+        setPropiedades(props);
+        setPropiedadesOriginales(props);
+      })
       .catch((err) => console.error("Error al cargar propiedades:", err));
   }, []);
-
-  // Cargar departamentos
-  useEffect(() => {
-    fetch("http://localhost:5000/api/departamentos")
-      .then((res) => res.json())
-      .then((data) => setDepartamentos(Array.isArray(data) ? data : []))
-      .catch((err) => console.error("Error al obtener departamentos:", err));
-  }, []);
-
-  const manejarBusqueda = (e) => {
-    e.preventDefault();
-    setContenido("calculo");
-  };
 
   const handlePublicar = () => {
     if (usuarioLogueado) {
@@ -52,117 +39,35 @@ function App() {
     <div className="app-container d-flex">
       <Sidebar
         usuarioLogueado={usuarioLogueado}
-        usuario={usuario} // Pasamos el usuario al sidebar
+        usuario={usuario}
         setContenido={setContenido}
         setUsuarioLogueado={setUsuarioLogueado}
       />
 
       <div className="contenido flex-grow-1 p-4">
+        {/* 🏠 PANTALLA INICIO */}
         {contenido === "inicio" && (
           <div className="container mt-4">
+            {/* Botón para publicar */}
             <div className="mb-3 text-center">
-              <button
-                className="btn btn-warning px-4"
-                onClick={handlePublicar}
-              >
+              <button className="btn btn-warning px-4" onClick={handlePublicar}>
                 Publicar Propiedad
               </button>
             </div>
 
-            <div className="card shadow-sm mb-4">
-              <div className="card-body">
-                <h4 className="text-center text-primary mb-3">
-                  Encuentra tu Hogar
-                </h4>
+            {/* 🟢 Buscador independiente */}
+            <Buscador
+              propiedades={propiedadesOriginales}
+              setPropiedadesFiltradas={setPropiedades}
+            />
 
-                <div className="d-flex justify-content-center gap-3 mb-3 flex-wrap">
-                  {["Comprar", "Alquilar"].map((tipo) => (
-                    <button
-                      key={tipo}
-                      type="button"
-                      className={`btn ${filtro === tipo ? "btn-primary" : "btn-outline-primary"
-                        } px-4`}
-                      onClick={() => setFiltro(tipo)}
-                    >
-                      {tipo}
-                    </button>
-                  ))}
-                </div>
-
-                <form
-                  onSubmit={manejarBusqueda}
-                  className="d-flex align-items-center gap-3 flex-wrap"
-                >
-                  <div
-                    style={{ position: "relative", flex: 1, maxWidth: "320px" }}
-                  >
-                    <input
-                      type="text"
-                      className="form-control buscador-input"
-                      placeholder="Buscar ubicación..."
-                      value={busqueda}
-                      onChange={(e) => {
-                        setBusqueda(e.target.value);
-                        if (e.target.value.length > 0) {
-                          const filtradas = (propiedades || [])
-                            .map((p) => p.ubicacion)
-                            .filter((u) =>
-                              u.toLowerCase().includes(e.target.value.toLowerCase())
-                            );
-                          setSugerencias([...new Set(filtradas)]);
-                        } else {
-                          setSugerencias([]);
-                        }
-                      }}
-                    />
-                    {sugerencias.length > 0 && (
-                      <ul
-                        className="list-group position-absolute w-100"
-                        style={{ zIndex: 1000, maxHeight: "200px", overflowY: "auto" }}
-                      >
-                        {sugerencias.map((sug, i) => (
-                          <li
-                            key={i}
-                            className="list-group-item list-group-item-action"
-                            style={{ cursor: "pointer" }}
-                            onClick={() => {
-                              setBusqueda(sug);
-                              setSugerencias([]);
-                            }}
-                          >
-                            {sug}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-
-                  <select
-                    className="form-select w-auto"
-                    value={departamentoSeleccionado}
-                    onChange={(e) => setDepartamentoSeleccionado(e.target.value)}
-                  >
-                    <option value="">Departamentos</option>
-                    {(departamentos || []).map((dep, i) => (
-                      <option key={i} value={dep}>
-                        {dep}
-                      </option>
-                    ))}
-                  </select>
-
-                  <button type="submit" className="btn btn-success px-4">
-                    Buscar
-                  </button>
-                </form>
-              </div>
-            </div>
-
+            {/* Listado de propiedades */}
             <h2 className="text-center mb-4 titulo">
               Propiedades en venta o renta
             </h2>
 
             <div className="row">
-              {Array.isArray(propiedades) &&
+              {propiedades.length > 0 ? (
                 propiedades.map((prop) => (
                   <div
                     className="col-md-3 mb-4"
@@ -186,7 +91,8 @@ function App() {
                           <strong>Ubicación:</strong> {prop.ubicacion}
                         </p>
                         <p>
-                          <strong>Área construida:</strong> {prop.areaConstruida} m²
+                          <strong>Área construida:</strong>{" "}
+                          {prop.areaConstruida} m²
                         </p>
                       </div>
 
@@ -212,11 +118,17 @@ function App() {
                       )}
                     </div>
                   </div>
-                ))}
+                ))
+              ) : (
+                <p className="text-center text-muted">
+                  No se encontraron propiedades con los filtros seleccionados.
+                </p>
+              )}
             </div>
           </div>
         )}
 
+        {/* 🔐 LOGIN */}
         {contenido === "login" && (
           <LoginForm
             onLoginSuccess={(usuarioData) => {
@@ -227,12 +139,16 @@ function App() {
           />
         )}
 
+        {/* 🧮 CÁLCULO */}
         {contenido === "calculo" && <FormularioCalculo />}
+
+        {/* 🏗️ REGISTRO */}
         {contenido === "registro" && (
           <div>Formulario de registro de propiedad (a implementar)</div>
         )}
-        {contenido === "publicar" && usuarioLogueado && <PublicForm />}
 
+        {/* 🏢 PUBLICAR */}
+        {contenido === "publicar" && usuarioLogueado && <PublicForm />}
       </div>
     </div>
   );

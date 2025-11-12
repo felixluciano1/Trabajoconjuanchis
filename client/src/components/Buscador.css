@@ -1,0 +1,18 @@
+.buscador-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.buscador-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.buscador-input:focus {
+  border-color: #198754;
+  box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+}
+
+.list-group-item-action:hover {
+  background-color: #e9f7ef;
+  color: #198754;
+}
