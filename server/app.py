@@ -45,9 +45,6 @@ def predecir():
         print("❌ Error en /predecir:", traceback.format_exc())
         return jsonify({"error": str(e)}), 500
 
-# ==========================
-# 🔐 LOGIN SIMULADO
-# ==========================
 usuarios = {
     "admin@gmail.com": "123456",
     "usuario@correo.com": "password"
@@ -65,8 +62,5 @@ def login():
         return jsonify({"success": False, "message": "Credenciales incorrectas"}), 401
 
 
-# ==========================
-# 🚀 INICIO DEL SERVIDOR
-# ==========================
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

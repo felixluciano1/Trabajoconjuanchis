@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./FormularioCalculo.css";
 
 const FormularioCalculo = () => {
   const [ubicacion, setUbicacion] = useState("");
@@ -12,7 +13,7 @@ const FormularioCalculo = () => {
 
   const calcular = async () => {
     if (!ubicacion || !superficie || !habitaciones || !banos || !ano) {
-      setError("Por favor completa todos los campos.");
+      setError("⚠️ Por favor completa todos los campos.");
       return;
     }
 
@@ -41,63 +42,94 @@ const FormularioCalculo = () => {
       setResultado(data.precio_estimado);
     } catch (err) {
       console.error("Error al calcular:", err);
-      setError("Hubo un problema al conectarse con el servidor.");
+      setError("❌ Hubo un problema al conectarse con el servidor.");
     } finally {
       setCargando(false);
     }
   };
 
   return (
-    <div className="container mt-5 p-4 border rounded shadow bg-light" style={{ maxWidth: "500px" }}>
-      <h3 className="text-center mb-4">🏡 Calcular precio de propiedad</h3>
+    <div className="calculo-container">
+      <h2>🏡 Estimador de Precio de Propiedad</h2>
+      <p className="subtitulo">Ingresa los datos del inmueble para obtener una estimación.</p>
 
-      <input
-        className="form-control mb-2"
-        placeholder="Ubicación"
-        value={ubicacion}
-        onChange={(e) => setUbicacion(e.target.value)}
-      />
-      <input
-        type="number"
-        className="form-control mb-2"
-        placeholder="Superficie (m²)"
-        value={superficie}
-        onChange={(e) => setSuperficie(e.target.value)}
-      />
-      <input
-        type="number"
-        className="form-control mb-2"
-        placeholder="Habitaciones"
-        value={habitaciones}
-        onChange={(e) => setHabitaciones(e.target.value)}
-      />
-      <input
-        type="number"
-        className="form-control mb-2"
-        placeholder="Baños"
-        value={banos}
-        onChange={(e) => setBanos(e.target.value)}
-      />
-      <input
-        type="number"
-        className="form-control mb-3"
-        placeholder="Año de construcción"
-        value={ano}
-        onChange={(e) => setAno(e.target.value)}
-      />
+      <div className="form-group">
+        <label>Ubicación</label>
+        <select
+          className="form-control"
+          value={ubicacion}
+          onChange={(e) => setUbicacion(e.target.value)}
+        >
+          <option value="">Selecciona una ubicación</option>
+          <option value="Trujillo Centro">Trujillo Centro</option>
+          <option value="Víctor Larco">Víctor Larco</option>
+          <option value="El Porvenir">El Porvenir</option>
+          <option value="Florencia de Mora">Florencia de Mora</option>
+          <option value="La Esperanza">La Esperanza</option>
+          <option value="Moche">Moche</option>
+          <option value="Huanchaco">Huanchaco</option>
+          <option value="Laredo">Laredo</option>
+          <option value="Poroto">Poroto</option>
+          <option value="Salaverry">Salaverry</option>
+        </select>
+      </div>
+
+      <div className="form-group">
+        <label>Superficie (m²)</label>
+        <input
+          type="number"
+          className="form-control"
+          placeholder="Ej: 120"
+          value={superficie}
+          onChange={(e) => setSuperficie(e.target.value)}
+        />
+      </div>
+
+      <div className="form-group">
+        <label>Habitaciones</label>
+        <input
+          type="number"
+          className="form-control"
+          placeholder="Ej: 3"
+          value={habitaciones}
+          onChange={(e) => setHabitaciones(e.target.value)}
+        />
+      </div>
+
+      <div className="form-group">
+        <label>Baños</label>
+        <input
+          type="number"
+          className="form-control"
+          placeholder="Ej: 2"
+          value={banos}
+          onChange={(e) => setBanos(e.target.value)}
+        />
+      </div>
+
+      <div className="form-group">
+        <label>Año de construcción</label>
+        <input
+          type="number"
+          className="form-control"
+          placeholder="Ej: 2018"
+          value={ano}
+          onChange={(e) => setAno(e.target.value)}
+        />
+      </div>
 
       <button
         onClick={calcular}
-        className="btn btn-primary w-100"
+        className="btn-calcular"
         disabled={cargando}
       >
         {cargando ? "Calculando..." : "Calcular Precio"}
       </button>
 
-      {error && <p className="text-danger mt-3 text-center">{error}</p>}
+      {error && <p className="mensaje-error">{error}</p>}
 
       {resultado !== null && (
-        <div className="alert alert-success mt-3 text-center">
+        <div className="resultado">
           💰 <strong>Precio estimado:</strong> S/. {resultado.toFixed(2)}
         </div>
       )}
