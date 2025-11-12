@@ -22,19 +22,16 @@ function Sidebar({ usuarioLogueado, usuario, setContenido, setUsuarioLogueado })
 
   return (
     <div
-      className={`sidebar-custom ${usuarioLogueado ? "propietario" : "visitante"
-        }`}
+      className={`sidebar-custom ${usuarioLogueado ? "propietario" : "visitante"}`}
     >
       <div className="sidebar-header text-center mb-4">
         <img
           src="/Logo.png"
           alt="Inmobiliaria Logo"
-          className={`sidebar-logo mb-2 ${usuarioLogueado ? "logo-propietario" : "logo-visitante"
-            }`}
+          className={`sidebar-logo mb-2 ${usuarioLogueado ? "logo-propietario" : "logo-visitante"}`}
         />
         <h4
-          className={`sidebar-title ${usuarioLogueado ? "titulo-propietario" : "titulo-visitante"
-            }`}
+          className={`sidebar-title ${usuarioLogueado ? "titulo-propietario" : "titulo-visitante"}`}
         >
           INMOBILIARIA
         </h4>
@@ -83,7 +80,18 @@ function Sidebar({ usuarioLogueado, usuario, setContenido, setUsuarioLogueado })
               </a>
             </li>
             <li className="nav-item mb-2">
-              <a href="#registro" className="nav-link" onClick={() => handleClick("registro")}>
+              <a
+                href="#publicar"
+                className="nav-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (usuarioLogueado) {
+                    setContenido("publicar");
+                  } else {
+                    setContenido("login");
+                  }
+                }}
+              >
                 <FaPlus className="me-2 icon" /> Publicar Propiedad
               </a>
             </li>
@@ -115,7 +123,7 @@ function Sidebar({ usuarioLogueado, usuario, setContenido, setUsuarioLogueado })
             <FaSignOutAlt className="me-1" /> Cerrar sesión
           </button>
         ) : (
-          <p>👋 Bienvenido, visitante</p>
+          <p>Bienvenido, visitante</p>
         )}
       </div>
     </div>
