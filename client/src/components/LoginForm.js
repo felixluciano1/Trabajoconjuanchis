@@ -97,6 +97,7 @@ function LoginForm({ onLoginSuccess }) {
   };
 
   return (
+    
     <div className="login-container">
       <div className="login-card">
         <h3>{modoRegistro ? "Registrarse" : "Iniciar Sesión"}</h3>
