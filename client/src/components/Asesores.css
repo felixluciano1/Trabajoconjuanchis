@@ -1,0 +1,89 @@
+.asesores-container {
+  max-width: 1200px;
+  margin: 60px auto;
+  padding: 30px;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+  color: #003366;
+}
+
+.asesores-container h2 {
+  font-size: 2rem;
+  margin-bottom: 15px;
+  color: #003366;
+}
+
+.intro {
+  color: #607d8b;
+  font-size: 1rem;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+.asesores-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  justify-items: center;
+}
+
+.asesor-card {
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  max-width: 350px;
+  transition: all 0.3s ease;
+}
+
+.asesor-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.asesor-foto {
+  width: 130px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 15px;
+  border: 3px solid #e0e0e0;
+}
+
+.especialidad {
+  color: #8b0000;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.experiencia {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 15px;
+  line-height: 1.4;
+}
+
+.btns-contacto {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn-whatsapp,
+.btn-correo {
+  padding: 8px 15px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background: linear-gradient(145deg, #ffffff, #f0f0f0);
+  color: #333;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-whatsapp:hover,
+.btn-correo:hover {
+  background: linear-gradient(145deg, #f9f9f9, #dcdcdc);
+  transform: scale(1.05);
+}

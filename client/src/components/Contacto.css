@@ -1,0 +1,76 @@
+.contacto-container {
+  max-width: 900px;
+  margin: 60px auto;
+  background: #ffffff;
+  padding: 40px 50px;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  font-family: "Poppins", sans-serif;
+  color: #2c3e50;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.contacto-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.contacto-header h2 {
+  font-size: 2rem;
+  color: #003366;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.contacto-header p {
+  color: #607d8b;
+  font-size: 1rem;
+}
+
+.contacto-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 25px;
+  margin-bottom: 40px;
+}
+
+.info-card {
+  background: #f7f9fc;
+  border-radius: 12px;
+  padding: 20px 25px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.info-card h4 {
+  color: #003366;
+  margin-bottom: 10px;
+}
+
+.info-card p {
+  font-size: 0.95rem;
+  margin: 5px 0;
+}
+
+.contacto-footer {
+  text-align: center;
+  color: #455a64;
+  font-size: 0.95rem;
+}
+
+.contacto-footer em {
+  display: block;
+  margin-top: 10px;
+  color: #8b0000;
+  font-weight: 600;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
