@@ -28,7 +28,7 @@ body {
   border-top-right-radius: 10px;
 }
 
-.overlay-asesor {
+.overlay-propietario {
   position: absolute;
   top: 0;
   left: 0;
@@ -41,7 +41,7 @@ body {
   z-index: 10;
 }
 
-.asesor-foto {
+.propietario-foto {
   width: 80px;
   height: 80px;
   object-fit: cover;
@@ -120,7 +120,6 @@ body {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
-/* Contenedor del formulario de búsqueda */
 .card-body form {
   display: flex;
   flex-direction: row;
@@ -132,19 +131,16 @@ body {
   padding: 0.5rem 0;
 }
 
-/* Input de búsqueda */
 .buscador-input {
   flex: 1;
   min-width: 150px;
   max-width: 350px;
 }
 
-/* Select de departamentos */
 .form-select {
   min-width: 120px;
 }
 
-/* Botón Buscar */
 .btn-success {
   min-width: 100px;
   padding: 0.5rem 1rem;

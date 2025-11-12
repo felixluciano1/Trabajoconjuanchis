@@ -15,7 +15,6 @@ function App() {
   const [usuario, setUsuario] = useState(null);
   const [contenido, setContenido] = useState("inicio");
 
-  // 🔹 Cargar propiedades desde backend
   useEffect(() => {
     fetch("http://localhost:5000/api/inmuebles")
       .then((res) => res.json())
@@ -45,23 +44,19 @@ function App() {
       />
 
       <div className="contenido flex-grow-1 p-4">
-        {/* 🏠 PANTALLA INICIO */}
         {contenido === "inicio" && (
           <div className="container mt-4">
-            {/* Botón para publicar */}
             <div className="mb-3 text-center">
               <button className="btn btn-warning px-4" onClick={handlePublicar}>
                 Publicar Propiedad
               </button>
             </div>
 
-            {/* 🟢 Buscador independiente */}
             <Buscador
               propiedades={propiedadesOriginales}
               setPropiedadesFiltradas={setPropiedades}
             />
 
-            {/* Listado de propiedades */}
             <h2 className="text-center mb-4 titulo">
               Propiedades en venta o renta
             </h2>
@@ -96,26 +91,31 @@ function App() {
                         </p>
                       </div>
 
-                      {hovered === prop.InmuebleId && prop.asesor_nombre && (
-                        <div className="overlay-asesor d-flex flex-column justify-content-center align-items-center text-white">
-                          <img
-                            src={prop.asesor_foto}
-                            alt={prop.asesor_nombre}
-                            className="asesor-foto mb-2"
-                          />
-                          <h6>{prop.asesor_nombre}</h6>
-                          <p className="mb-1">Tel: {prop.asesor_telefono}</p>
-                          <p className="mb-1">{prop.asesor_correo}</p>
-                          <a
-                            href={prop.asesor_whatsapp}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn btn-success btn-sm mt-2"
-                          >
-                            WhatsApp
-                          </a>
-                        </div>
-                      )}
+                      {hovered === prop.InmuebleId &&
+                        prop.propietario_nombre && (
+                          <div className="overlay-propietario d-flex flex-column justify-content-center align-items-center text-white">
+                            <img
+                              src={prop.propietario_foto}
+                              alt={prop.propietario_nombre}
+                              className="propietario-foto mb-2"
+                            />
+                            <h6>{prop.propietario_nombre}</h6>
+                            <p className="mb-1">
+                              Tel: {prop.propietario_telefono}
+                            </p>
+                            <p className="mb-1">
+                              {prop.propietario_correo}
+                            </p>
+                            <a
+                              href={prop.propietario_whatsapp}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="btn btn-success btn-sm mt-2"
+                            >
+                              WhatsApp
+                            </a>
+                          </div>
+                        )}
                     </div>
                   </div>
                 ))
@@ -128,7 +128,6 @@ function App() {
           </div>
         )}
 
-        {/* 🔐 LOGIN */}
         {contenido === "login" && (
           <LoginForm
             onLoginSuccess={(usuarioData) => {
@@ -139,15 +138,12 @@ function App() {
           />
         )}
 
-        {/* 🧮 CÁLCULO */}
         {contenido === "calculo" && <FormularioCalculo />}
 
-        {/* 🏗️ REGISTRO */}
         {contenido === "registro" && (
           <div>Formulario de registro de propiedad (a implementar)</div>
         )}
 
-        {/* 🏢 PUBLICAR */}
         {contenido === "publicar" && usuarioLogueado && <PublicForm />}
       </div>
     </div>
