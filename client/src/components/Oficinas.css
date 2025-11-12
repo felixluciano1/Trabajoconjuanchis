@@ -1,0 +1,114 @@
+.oficinas-container {
+  padding: 50px 80px;
+  background: radial-gradient(circle at 20% 30%, #f6f6f6, #dcdcdc, #e8e8e8);
+  min-height: 100vh;
+  animation: fondoMovimiento 15s ease-in-out infinite alternate;
+}
+
+@keyframes fondoMovimiento {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.titulo-principal {
+  text-align: center;
+  font-weight: 700;
+  font-size: 2.5rem;
+  color: #222;
+  margin-bottom: 15px;
+}
+
+.descripcion {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 50px;
+  max-width: 850px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.oficinas-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 35px;
+}
+
+.oficina-card {
+  background: #fff;
+  width: 320px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.oficina-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.oficina-img {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+}
+
+.oficina-info {
+  padding: 20px;
+}
+
+.oficina-info h3 {
+  color: #222;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.oficina-info p {
+  color: #555;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.detalle {
+  font-size: 0.9rem;
+  margin-top: 10px;
+  color: #666;
+}
+
+.btn-oficina {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #f9f9f9;
+  color: #333;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-oficina:hover {
+  background-color: #ddd;
+  color: #000;
+  border-color: #999;
+}
+
+.mensaje-final {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 1.1rem;
+  color: #333;
+  font-weight: 500;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}

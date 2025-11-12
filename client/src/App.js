@@ -4,6 +4,7 @@ import FormularioCalculo from "./components/FormularioCalculo";
 import LoginForm from "./components/LoginForm";
 import PublicForm from "./components/PublicForm";
 import Buscador from "./components/Buscador";
+import Oficinas from "./components/Oficinas"; // ✅ Importado
 
 import "./App.css";
 
@@ -37,6 +38,7 @@ function App() {
 
   return (
     <div className="app-container d-flex">
+      {/* 🧭 MENÚ LATERAL */}
       <Sidebar
         usuarioLogueado={usuarioLogueado}
         usuario={usuario}
@@ -44,24 +46,23 @@ function App() {
         setUsuarioLogueado={setUsuarioLogueado}
       />
 
+      {/* 🔹 CONTENIDO PRINCIPAL */}
       <div className="contenido flex-grow-1 p-4">
-        {/* 🏠 PANTALLA INICIO */}
+
+        {/* 🏠 INICIO */}
         {contenido === "inicio" && (
           <div className="container mt-4">
-            {/* Botón para publicar */}
             <div className="mb-3 text-center">
               <button className="btn btn-warning px-4" onClick={handlePublicar}>
                 Publicar Propiedad
               </button>
             </div>
 
-            {/* 🟢 Buscador independiente */}
             <Buscador
               propiedades={propiedadesOriginales}
               setPropiedadesFiltradas={setPropiedades}
             />
 
-            {/* Listado de propiedades */}
             <h2 className="text-center mb-4 titulo">
               Propiedades en venta o renta
             </h2>
@@ -142,13 +143,11 @@ function App() {
         {/* 🧮 CÁLCULO */}
         {contenido === "calculo" && <FormularioCalculo />}
 
-        {/* 🏗️ REGISTRO */}
-        {contenido === "registro" && (
-          <div>Formulario de registro de propiedad (a implementar)</div>
-        )}
-
         {/* 🏢 PUBLICAR */}
         {contenido === "publicar" && usuarioLogueado && <PublicForm />}
+
+        {/* 🏢 OFICINAS (nuevo) */}
+        {contenido === "oficinas" && <Oficinas />} 
       </div>
     </div>
   );
