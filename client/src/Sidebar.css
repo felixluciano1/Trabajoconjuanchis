@@ -1,43 +1,18 @@
-/* === BOTÓN HAMBURGUESA === */
-.btn-toggle {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 1050;
-  background: #ffc107;
-  border: none;
-  color: #1b2838;
-  font-size: 1.5rem;
-  padding: 10px 12px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-}
-
-.btn-toggle:hover {
-  background: #ffcd39;
-  transform: scale(1.1);
-}
-
-/* === SIDEBAR BASE === */
+/* === SIDEBAR ESTÁTICO A LA DERECHA === */
 .sidebar-custom {
   width: 270px;
   height: 100vh;
   color: #f8f9fa;
   padding: 25px 20px;
-  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.4);
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.4); /* sombra invertida */
   position: fixed;
   top: 0;
-  right: -280px;
-  transition: right 0.4s ease, background 0.4s ease, box-shadow 0.3s ease;
-  z-index: 1045;
+  right: 0; /* ✅ ahora sale al lado derecho */
+  background: linear-gradient(180deg, #1b2838 0%, #2c3e50 100%);
   display: flex;
   flex-direction: column;
-}
-
-.sidebar-custom.open {
-  right: 0;
+  z-index: 1045;
+  transition: none;
 }
 
 /* === MODO VISITANTE === */
@@ -47,7 +22,7 @@
 
 /* === MODO PROPIETARIO === */
 .sidebar-custom.propietario {
-  background: linear-gradient(180deg, #5a0000 0%, #8B0000 100%);
+  background: linear-gradient(180deg, #5a0000 0%, #8b0000 100%);
 }
 
 /* === LOGO === */
@@ -59,7 +34,6 @@
   border: 2px solid #ffc107;
   background-color: #fff;
   padding: 4px;
-  transition: all 0.3s ease;
   box-shadow: 0 0 10px rgba(255, 193, 7, 0.4);
 }
 
@@ -81,7 +55,6 @@
   font-weight: 600;
   letter-spacing: 1px;
   color: #ffc107;
-  transition: color 0.3s ease;
 }
 
 .titulo-propietario {
@@ -118,52 +91,20 @@
 
 .nav-link:hover {
   background-color: rgba(255, 255, 255, 0.15);
-  transform: translateX(-5px);
+  transform: translateX(-5px); /* ✅ animación hacia la izquierda */
 }
 
 /* === MENÚ PRINCIPAL === */
 .nav {
   display: flex !important;
-  /* Forzar flexbox */
   flex-direction: column !important;
-  /* Botones verticales */
   flex-grow: 1;
   overflow-y: auto;
   padding-bottom: 15px;
   gap: 8px;
-  /* separa verticalmente los items */
 }
 
 /* === PIE DE SIDEBAR === */
-.sidebar-footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  padding-top: 15px;
-  text-align: center;
-  font-size: 0.9rem;
-  opacity: 0.8;
-  color: #ccc;
-}
-
-/* === FONDO OSCURO === */
-.sidebar-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1040;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-.sidebar-overlay.active {
-  opacity: 1;
-  pointer-events: all;
-}
-
-/* === FOOTER === */
 .sidebar-footer {
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   padding-top: 15px;
@@ -179,6 +120,7 @@
   font-weight: 500;
 }
 
+/* === BOTÓN CERRAR SESIÓN === */
 .btn-logout {
   background: transparent;
   color: #ffc107;
@@ -193,4 +135,10 @@
 .btn-logout:hover {
   background: #ffc107;
   color: #1b2838;
+}
+
+/* === ELEMENTOS ELIMINADOS === */
+.btn-toggle,
+.sidebar-overlay {
+  display: none !important;
 }
