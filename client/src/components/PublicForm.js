@@ -6,7 +6,6 @@ function PublicForm() {
     nombre: "",
     telefono: "",
     correo: "",
-    whatsapp: "",
     foto: "",
   });
 
@@ -74,7 +73,6 @@ function PublicForm() {
         nombre: "",
         telefono: "",
         correo: "",
-        whatsapp: "",
         foto: "",
       });
       setPaso(1);
@@ -124,16 +122,6 @@ function PublicForm() {
               value={propietario.correo}
               onChange={(e) => setPropietario({ ...propietario, correo: e.target.value })}
               required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">WhatsApp (opcional)</label>
-            <input
-              type="text"
-              className="form-control"
-              value={propietario.whatsapp}
-              onChange={(e) => setPropietario({ ...propietario, whatsapp: e.target.value })}
             />
           </div>
 

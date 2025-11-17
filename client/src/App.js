@@ -4,10 +4,10 @@ import FormularioCalculo from "./components/FormularioCalculo";
 import LoginForm from "./components/LoginForm";
 import PublicForm from "./components/PublicForm";
 import Buscador from "./components/Buscador";
-import Oficinas from "./components/Oficinas"; 
+import Oficinas from "./components/Oficinas";
 import Asesores from "./components/Asesores";
 import Contacto from "./components/Contacto";
-
+import DetalleInmueble from "./DetalleInmueble";
 
 import "./App.css";
 
@@ -40,7 +40,8 @@ function App() {
 
   return (
     <div className="app-container d-flex">
-      {/* 🧭 MENÚ LATERAL */}
+
+      {/* Sidebar */}
       <Sidebar
         usuarioLogueado={usuarioLogueado}
         usuario={usuario}
@@ -48,10 +49,10 @@ function App() {
         setUsuarioLogueado={setUsuarioLogueado}
       />
 
-      {/* 🔹 CONTENIDO PRINCIPAL */}
+      {/* CONTENIDO PRINCIPAL */}
       <div className="contenido flex-grow-1 p-4">
 
-        {/* 🏠 INICIO */}
+        {/* INICIO */}
         {contenido === "inicio" && (
           <div className="container mt-4">
             <div className="mb-3 text-center">
@@ -80,62 +81,65 @@ function App() {
                     style={{ position: "relative" }}
                   >
                     <div className="card propiedad-card shadow-lg border-0">
+
                       <img
                         src={prop.imagen}
                         className="card-img-top propiedad-img"
                         alt={prop.tipo}
                       />
+
                       <div className="card-body">
                         <h5 className="card-title text-primary">{prop.tipo}</h5>
-                        <p>
-                          <strong>Precio:</strong> ${prop.precio}
-                        </p>
-                        <p>
-                          <strong>Ubicación:</strong> {prop.ubicacion}
-                        </p>
-                        <p>
-                          <strong>Área construida:</strong>{" "}
-                          {prop.areaConstruida} m²
-                        </p>
+                        <p><strong>Precio:</strong> ${prop.precio}</p>
+                        <p><strong>Ubicación:</strong> {prop.ubicacion}</p>
+                        <p><strong>Área construida:</strong> {prop.areaConstruida} m²</p>
                       </div>
 
-                      {hovered === prop.InmuebleId &&
-                        prop.propietario_nombre && (
-                          <div className="overlay-propietario d-flex flex-column justify-content-center align-items-center text-white">
+                      {/* overlay completo */}
+                      {hovered === prop.InmuebleId && prop.propietario_nombre && (
+                        <div className="overlay-propietario">
+
+                          <div className="overlay-content text-center">
                             <img
                               src={prop.propietario_foto}
                               alt={prop.propietario_nombre}
                               className="propietario-foto mb-2"
                             />
-                            <h6>{prop.propietario_nombre}</h6>
-                            <p className="mb-1">
-                              Tel: {prop.propietario_telefono}
-                            </p>
-                            <p className="mb-1">
-                              {prop.propietario_correo}
-                            </p>
-                            <a
-                              href={prop.propietario_whatsapp}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="btn btn-success btn-sm mt-2"
+                            <h6 className="mb-1">{prop.propietario_nombre}</h6>
+
+                            <p className="mb-1">Tel: {prop.propietario_telefono}</p>
+                            <p className="mb-2">{prop.propietario_correo}</p>
+
+                            {/* BOTÓN MOSTRAR DETALLE → setContenido */}
+                            <button
+                              className="btn btn-light btn-sm"
+                              onClick={() =>
+                                setContenido({
+                                  tipo: "detalle",
+                                  id: prop.InmuebleId,
+                                })
+                              }
                             >
-                              WhatsApp
-                            </a>
+                              Más información
+                            </button>
                           </div>
-                        )}
+
+                        </div>
+                      )}
+
                     </div>
                   </div>
                 ))
               ) : (
                 <p className="text-center text-muted">
-                  No se encontraron propiedades con los filtros seleccionados.
+                  No se encontraron propiedades.
                 </p>
               )}
             </div>
           </div>
         )}
 
+        {/* LOGIN */}
         {contenido === "login" && (
           <LoginForm
             onLoginSuccess={(usuarioData) => {
@@ -146,19 +150,19 @@ function App() {
           />
         )}
 
-     
+        {/* DETALLE */}
+        {contenido.tipo === "detalle" && (
+          <DetalleInmueble
+            id={contenido.id}
+            volver={() => setContenido("inicio")}
+          />
+        )}
+
         {contenido === "calculo" && <FormularioCalculo />}
-
         {contenido === "publicar" && usuarioLogueado && <PublicForm />}
-      
-        {contenido === "oficinas" && <Oficinas />} 
-
+        {contenido === "oficinas" && <Oficinas />}
         {contenido === "asesores" && <Asesores />}
-
         {contenido === "contactanos" && <Contacto />}
-
-
-
       </div>
     </div>
   );

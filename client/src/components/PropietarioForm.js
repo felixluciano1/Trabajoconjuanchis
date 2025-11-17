@@ -5,7 +5,6 @@ function PropietarioForm({ onRegistroExitoso }) {
     nombre: "",
     telefono: "",
     correo: "",
-    whatsapp: "",
     foto: "",
   });
   const [guardando, setGuardando] = useState(false);
@@ -78,18 +77,7 @@ function PropietarioForm({ onRegistroExitoso }) {
             required
           />
         </div>
-        <div className="mb-3">
-          <label>WhatsApp:</label>
-          <input
-            type="text"
-            className="form-control"
-            name="whatsapp"
-            value={form.whatsapp}
-            onChange={handleChange}
-            placeholder="https://wa.me/51XXXXXXXXX"
-            required
-          />
-        </div>
+        
         <div className="mb-3">
           <label>Foto (URL):</label>
           <input

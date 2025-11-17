@@ -28,13 +28,16 @@ app.get("/", (req, res) => {
     res.send("Servidor backend de inmobiliaria funcionando correctamente");
 });
 
+/* ============================================================
+   📌 1. OBTENER DEPARTAMENTOS
+============================================================ */
 app.get("/api/departamentos", (req, res) => {
     const query = `
-    SELECT DISTINCT departamento 
-    FROM inmueble 
-    WHERE departamento IS NOT NULL AND departamento <> ''
-    ORDER BY departamento ASC
-  `;
+      SELECT DISTINCT departamento 
+      FROM inmueble 
+      WHERE departamento IS NOT NULL AND departamento <> ''
+      ORDER BY departamento ASC
+    `;
     db.query(query, (err, results) => {
         if (err) {
             console.error("Error al obtener departamentos:", err);
@@ -45,18 +48,21 @@ app.get("/api/departamentos", (req, res) => {
     });
 });
 
+/* ============================================================
+   📌 2. OBTENER INMUEBLES + PROPIETARIOS
+============================================================ */
 app.get("/api/inmuebles", (req, res) => {
     const { ubicacion } = req.query;
     let sql = `
-    SELECT i.*, 
-        p.nombre AS asesor_nombre,
-        p.telefono AS asesor_telefono,
-        p.correo AS asesor_correo,
-        p.whatsapp AS asesor_whatsapp,
-        p.foto AS asesor_foto
-    FROM inmueble i
-    LEFT JOIN propietario p ON i.PropietarioId = p.PropietarioId
-  `;
+      SELECT i.*, 
+          p.nombre AS propietario_nombre,
+          p.telefono AS propietario_telefono,
+          p.correo AS propietario_correo,
+          p.foto AS propietario_foto
+      FROM inmueble i
+      LEFT JOIN propietario p ON i.PropietarioId = p.PropietarioId
+    `;
+
     const params = [];
 
     if (ubicacion) {
@@ -73,19 +79,22 @@ app.get("/api/inmuebles", (req, res) => {
     });
 });
 
+/* ============================================================
+   📌 3. REGISTRAR PROPIETARIO
+============================================================ */
 app.post("/api/propietarios", (req, res) => {
-    const { nombre, telefono, correo, whatsapp, foto } = req.body;
+    const { nombre, telefono, correo, foto } = req.body;
 
     if (!nombre || !telefono || !correo) {
         return res.status(400).json({ error: "Faltan campos obligatorios" });
     }
 
     const query = `
-    INSERT INTO propietario (nombre, telefono, correo, whatsapp, foto)
-    VALUES (?, ?, ?, ?, ?)
-  `;
+      INSERT INTO propietario (nombre, telefono, correo, foto)
+      VALUES (?, ?, ?, ?)
+    `;
 
-    db.query(query, [nombre, telefono, correo, whatsapp, foto], (err, result) => {
+    db.query(query, [nombre, telefono, correo, foto], (err, result) => {
         if (err) {
             console.error("Error al insertar propietario:", err);
             return res.status(500).json({ error: "Error al registrar propietario" });
@@ -98,6 +107,9 @@ app.post("/api/propietarios", (req, res) => {
     });
 });
 
+/* ============================================================
+   📌 4. REGISTRAR CLIENTE
+============================================================ */
 app.post("/api/registrar", async (req, res) => {
     const { nombre, telefono, correo, contra } = req.body;
 
@@ -107,6 +119,7 @@ app.post("/api/registrar", async (req, res) => {
 
     try {
         const verificarQuery = "SELECT * FROM cliente WHERE correo = ?";
+
         db.query(verificarQuery, [correo], async (err, results) => {
             if (err) {
                 console.error("Error al verificar correo:", err);
@@ -119,9 +132,9 @@ app.post("/api/registrar", async (req, res) => {
 
             const hashedPassword = await bcrypt.hash(contra, 10);
             const insertQuery = `
-        INSERT INTO cliente (nombre, telefono, correo, contra) 
-        VALUES (?, ?, ?, ?)
-      `;
+              INSERT INTO cliente (nombre, telefono, correo, contra) 
+              VALUES (?, ?, ?, ?)
+            `;
 
             db.query(insertQuery, [nombre, telefono, correo, hashedPassword], (err, result) => {
                 if (err) {
@@ -137,6 +150,9 @@ app.post("/api/registrar", async (req, res) => {
     }
 });
 
+/* ============================================================
+   📌 5. LOGIN CLIENTE
+============================================================ */
 app.post("/api/login", (req, res) => {
     const { correo, contra } = req.body;
 
@@ -145,6 +161,7 @@ app.post("/api/login", (req, res) => {
     }
 
     const query = "SELECT * FROM cliente WHERE correo = ?";
+
     db.query(query, [correo], async (err, results) => {
         if (err) {
             console.error("Error al consultar cliente:", err);
@@ -176,6 +193,9 @@ app.post("/api/login", (req, res) => {
     });
 });
 
+/* ============================================================
+   📌 6. INSERTAR PUBLICACIÓN
+============================================================ */
 app.post("/api/publicaciones", (req, res) => {
     const {
         foto,
@@ -189,10 +209,10 @@ app.post("/api/publicaciones", (req, res) => {
     } = req.body;
 
     const query = `
-    INSERT INTO publicacion 
-    (foto, ubicacion, superficie_m2, habitaciones, banos, anio_construccion, precio_venta, PropietarioId)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `;
+      INSERT INTO publicacion 
+      (foto, ubicacion, superficie_m2, habitaciones, banos, anio_construccion, precio_venta, PropietarioId)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `;
 
     db.query(
         query,
@@ -210,6 +230,42 @@ app.post("/api/publicaciones", (req, res) => {
     );
 });
 
+/* ============================================================
+   📌 7. ***NUEVA RUTA*** — OBTENER DETALLES DE PUBLICACIÓN
+============================================================ */
+app.get("/publicacion/:id", (req, res) => {
+    const { id } = req.params;
+
+    const sql = `
+      SELECT 
+        p.*,
+        o.nombre AS propietario_nombre,
+        o.telefono AS propietario_telefono,
+        o.correo AS propietario_correo,
+        o.foto AS propietario_foto
+      FROM publicacion p
+      LEFT JOIN propietario o ON p.PropietarioId = o.PropietarioId
+      WHERE p.InmuebleId = ?
+      LIMIT 1
+    `;
+
+    db.query(sql, [id], (err, results) => {
+        if (err) {
+            console.error("Error al obtener publicación:", err);
+            return res.status(500).json({ error: "Error en el servidor" });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ error: "Publicación no encontrada" });
+        }
+
+        res.json(results[0]);
+    });
+});
+
+/* ============================================================
+   📌 SERVIDOR ACTIVO
+============================================================ */
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
