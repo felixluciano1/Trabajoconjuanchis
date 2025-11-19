@@ -5,7 +5,7 @@ function PropietarioForm({ onRegistroExitoso }) {
     nombre: "",
     telefono: "",
     correo: "",
-    foto: "",
+    
   });
   const [guardando, setGuardando] = useState(false);
 
@@ -77,18 +77,7 @@ function PropietarioForm({ onRegistroExitoso }) {
             required
           />
         </div>
-        
-        <div className="mb-3">
-          <label>Foto (URL):</label>
-          <input
-            type="text"
-            className="form-control"
-            name="foto"
-            value={form.foto}
-            onChange={handleChange}
-            placeholder="https://imagen.com/foto.jpg"
-          />
-        </div>
+      
 
         <button
           type="submit"

@@ -125,15 +125,6 @@ function PublicForm() {
             />
           </div>
 
-          <div className="mb-3">
-            <label className="form-label">Foto (URL opcional)</label>
-            <input
-              type="text"
-              className="form-control"
-              value={propietario.foto}
-              onChange={(e) => setPropietario({ ...propietario, foto: e.target.value })}
-            />
-          </div>
 
           <button type="submit" className="btn btn-primary w-100">
             Continuar para publicar propiedad
